@@ -1,0 +1,24 @@
+{
+  "name": "vuedrops-animate",
+  "version": "1.0.0",
+  "description": "Animation tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/achouaiekh/vuedrops-animate.git"
+  },
+  "keywords": [
+    "animate",
+    "animation",
+    "progress"
+  ],
+  "author": "Amine Chouaiekh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/achouaiekh/vuedrops-animate/issues"
+  },
+  "homepage": "https://github.com/achouaiekh/vuedrops-animate#readme"
+}
