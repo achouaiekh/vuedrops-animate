@@ -1,12 +1,12 @@
 module.exports = {
     // This is the "main" file which should include all other modules
-    entry: './src/main.js',
+    entry: './app.js',
     // Where should the compiled file go?
     output: {
         // To the `dist` folder
-        path: './dist',
+        path: './',
         // With the filename `build.js` so it's dist/build.js
-        filename: 'main.js'
+        filename: 'vuedrops-animate.js'
     },
     module: {
         // Special compilation rules
