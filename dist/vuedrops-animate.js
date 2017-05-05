@@ -46,15 +46,22 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
 	var _Animate = __webpack_require__(1);
 
 	var _Animate2 = _interopRequireDefault(_Animate);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	window.vuedropsAnimate = _Animate2.default; /**
-	                                             * Created by khalilove on 2017-04-27.
-	                                             */
+	exports.default = {
+	    animate: _Animate2.default
+	};
+
+
+	window.vuedrops.animate = _Animate2.default;
 
 /***/ }),
 /* 1 */
