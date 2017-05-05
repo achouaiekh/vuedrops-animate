@@ -60,9 +60,6 @@
 	    animate: _Animate2.default
 	};
 
-
-	window.vuedrops.animate = _Animate2.default;
-
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
