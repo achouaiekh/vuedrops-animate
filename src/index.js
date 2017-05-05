@@ -4,5 +4,4 @@ export default {
     animate
 }
 
-window.vuedrops.animate = animate
 
