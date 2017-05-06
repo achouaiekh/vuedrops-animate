@@ -92,15 +92,15 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var _class = function () {
-	    function _class(options) {
-	        (0, _classCallCheck3.default)(this, _class);
+	var Animate = function () {
+	    function Animate(options) {
+	        (0, _classCallCheck3.default)(this, Animate);
 
 	        this.options = (0, _assign2.default)({}, DEFAULTS, options);
 	        console.log(this.options, 'options');
 	    }
 
-	    (0, _createClass3.default)(_class, [{
+	    (0, _createClass3.default)(Animate, [{
 	        key: 'from',
 	        value: function from(_from) {
 
@@ -167,10 +167,10 @@
 	            });
 	        }
 	    }]);
-	    return _class;
+	    return Animate;
 	}();
 
-	exports.default = _class;
+	exports.default = Animate;
 
 
 	var DEFAULTS = {
