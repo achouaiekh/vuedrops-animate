@@ -1,4 +1,4 @@
-export default class {
+export default class Animate {
 
     constructor(options) {
         this.options = Object.assign({}, DEFAULTS, options);
