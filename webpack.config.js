@@ -1,24 +1,48 @@
+const path = require('path');
+const webpack = require('webpack');
+
+
 module.exports = {
-    // This is the "main" file which should include all other modules
-    entry: './src/index.js',
-    // Where should the compiled file go?
-    output: {
-        // To the `dist` folder
-        path: './dist',
-        // With the filename `build.js` so it's dist/build.js
-        filename: 'vuedrops-animate.js'
+    context: path.resolve(__dirname, './src'),
+    entry: {
+        app: './index.js',
     },
+    output: {
+        path: path.resolve(__dirname, './dist'),
+        filename: '[name].js',
+        library: 'VAnimate',
+        publicPath: '/assets',
+    },
+
     module: {
-        // Special compilation rules
-        loaders: [
+        rules: [
             {
-                // Ask webpack to check: If this file ends with .js, then apply some transforms
                 test: /\.js$/,
-                // Transform it with babel
-                loader: 'babel',
-                // don't transform node_modules folder (which don't need to be compiled)
-                exclude: /node_modules/
-            }
-        ]
-    }
-}
+                exclude: [/node_modules/],
+                use: [{
+                    loader: 'babel-loader',
+                    options: { presets: ['es2015'] },
+                }],
+            },
+            /*{
+                test: /\.(sass|scss)$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader',
+                ]
+            }*/
+
+        ],
+    },
+
+    /*resolve: {
+        alias: {
+            'vue$': 'vue/dist/vue.common.js'
+        }
+    },*/
+
+    devServer: {
+        contentBase: path.resolve(__dirname, './src'),  // New
+    },
+};
