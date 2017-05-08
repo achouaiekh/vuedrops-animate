@@ -1,6 +1,6 @@
 import EASING from './easing'
 
-export default class {
+export default class Animate{
 
 
     constructor(options) {
