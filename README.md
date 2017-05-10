@@ -1,2 +1,69 @@
 # vuedrops-animate
-Animation callback progress
+
+## Synopsis
+A simple Animation tool 
+
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Development](#development)
+- [License](#license)
+
+## Installation
+``` bash
+npm install -S vuedrops-animate
+```
+## Usage
+```javascript
+  import Animate from "vuedrops-animate" 
+  ```  
+  or
+  ```javascript
+  let Animaton = new Animate({speed: 300, easing: 'linear'})
+```  
+
+
+## Code Example
+```javascript
+  import Animate from "vuedrops-animate"
+  
+  let Animaton = new Animate({speed: 300, easing: 'linear'})
+                        .from(1)
+                        .to(3)
+                        .play(function(count){ console.log(count) })
+                        .then(function(){ console.log("Counting finished")})
+
+```  
+
+> the result will be:
+>
+>     1
+>     2   
+>     3
+>     Counting finished
+
+## Motivation
+
+A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
+
+
+
+## API Reference
+
+Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
+
+## Tests
+
+Describe and show how to run the tests with code examples.
+
+## Contributors
+
+Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.
+
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
+
+## License
+
+[MIT License](LICENSE.md). © 2017 [Julian Garnier](http://juliangarnier.com).
+
+Thanks to [javascript info](https://github.com/bendc/animateplus) and [jQuery Easing v1.3](http://gsgd.co.uk/sandbox/jquery/easing/) that inspired `vuedrops-animate` 

@@ -95,6 +95,3 @@ const DEFAULTS = {
 }
 
 
-window.VDAnimation = Animate.default
-
-

@@ -10,7 +10,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, './dist'),
         filename: '[name].js',
-        library: 'VAnimate',
+        library: 'VDAnimate',
         publicPath: '/assets',
     },
 
@@ -24,23 +24,8 @@ module.exports = {
                     options: { presets: ['es2015'] },
                 }],
             },
-            /*{
-                test: /\.(sass|scss)$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'sass-loader',
-                ]
-            }*/
-
         ],
     },
-
-    /*resolve: {
-        alias: {
-            'vue$': 'vue/dist/vue.common.js'
-        }
-    },*/
 
     devServer: {
         contentBase: path.resolve(__dirname, './src'),  // New
