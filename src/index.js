@@ -24,6 +24,16 @@ export default class Animate{
         return this
     }
 
+    easing(easing){
+        this.options.easing = easing
+        return this
+    }
+
+    speed(speed){
+        this.options.speed = speed
+        return this
+    }
+
     play(callback, options = {}) {
 
         Object.assign(options, this.options, options, {callback})
@@ -32,7 +42,7 @@ export default class Animate{
 
         return new Promise((resolve, reject) => {
 
-            this.id = setInterval(() => {
+            this.animationId = setInterval(() => {
 
                 let t = (new Date - start) / options.speed
 
@@ -47,14 +57,14 @@ export default class Animate{
                     options.callback.call(options.context, delta, ...options.arguments)
 
                     if (t === 1) {
-                        clearInterval(this.id)
+                        clearInterval(this.animationId)
 
                         resolve(this)
                     }
                 }
 
                 catch (e) {
-                    clearInterval(id)
+                    clearInterval(this.animationId)
 
                     reject(e)
                 }
@@ -65,7 +75,7 @@ export default class Animate{
     }
 
     stop() {
-        clearInterval(this.id)
+        clearInterval(this.AnimationId)
         return this
     }
 }
