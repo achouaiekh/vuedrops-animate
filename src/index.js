@@ -1,15 +1,16 @@
 import EASING from './easing'
 
-export default class Animate{
+export default class Animate {
 
 
     constructor(options) {
         this.options = Object.assign({}, DEFAULTS, options)
         this.animationId = null
+        this.initialValue = this.this.options.from
     }
 
     from(from) {
-        this.options.from = from
+        this.options.from = this.initialValue = from
         return this
     }
 
@@ -24,21 +25,28 @@ export default class Animate{
         return this
     }
 
-    easing(easing){
+    easing(easing) {
         this.options.easing = easing
         return this
     }
 
-    speed(speed){
+    speed(speed) {
         this.options.speed = speed
+        return this
+    }
+
+    step(step) {
+        this.options.step = step
         return this
     }
 
     play(callback, options = {}) {
 
-        Object.assign(options, this.options, options, {callback})
+        Object.assign(this.options, this.options, options, {callback})
 
-        let start = new Date
+        let start = new Date,
+            _this = this,
+            options = this.options
 
         return new Promise((resolve, reject) => {
 
@@ -52,19 +60,19 @@ export default class Animate{
 
                     let delta = EASING[options.easing](t, 0, 1, options.speed)
 
-                    delta = options.from + delta * (options.to - options.from)
+                    this.initialValue = delta = options.from + delta * (options.to - options.from)
 
                     options.callback.call(options.context, delta, ...options.arguments)
 
                     if (t === 1) {
-                        clearInterval(this.animationId)
+                        _this.stop()
 
-                        resolve(this)
+                        resolve(_this)
                     }
                 }
 
                 catch (e) {
-                    clearInterval(this.animationId)
+                    _this.stop()
 
                     reject(e)
                 }
@@ -77,6 +85,21 @@ export default class Animate{
     stop() {
         clearInterval(this.AnimationId)
         return this
+    }
+
+    continue() {
+
+        let temp = this.option.from
+
+        this.option.from = this.initialValue
+
+        this.initialValue = temp
+
+        return this.play()
+    }
+
+    replay() {
+        this.play({from: this.initialValue})
     }
 }
 

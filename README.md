@@ -42,10 +42,27 @@ npm install -S vuedrops-animate
 >     3
 >     Counting finished
 
-## Motivation
+## API
+### Options
+#### from
+* Type : `Number`
+* Default : `0`
 
-A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
+the initial value of the animated property
+#### to
+* Type : `Number`
+* Default : `1`
 
+the final value of the animated property
+#### easing
+* Type : `String`
+* Default : `linear`
+* Easing Type: `linear, swing, easeInQuad, easeOutQuad, easeInOutQuad, easeInCubic, easeOutCubic, easeInOutCubic, easeInQuart, easeOutQuart, easeInOutQuart, easeInQuint, easeOutQuint, easeInOutQuint, easeInSine, easeOutSine, easeInOutSine, easeInExpo, easeOutExpo, easeInOutExgitpo, easeInCirc, easeOutCirc, easeInOutCirc, easeInElastic, easeOutElastic, easeInOutElastic , easeInBack, easeOutBack, easeInOutBack, easeInBounce, easeOutBounce, easeInOutBounce`
+#### speed
+* Type : `Number`
+* Default : `300`
+
+The speed or duration of the animation in milliseconds
 
 
 ## API Reference
@@ -64,6 +81,6 @@ Let people know how they can dive into the project, include important links to t
 
 ## License
 
-[MIT License](LICENSE.md). © 2017 [Julian Garnier](http://juliangarnier.com).
+[ISC License](https://github.com/nevir/readable-licenses/blob/master/markdown/ISC-LICENSE.md). © 2017 [Amine Chouaiekh](https://github.com/achouaiekh).
 
-Thanks to [javascript info](https://github.com/bendc/animateplus) and [jQuery Easing v1.3](http://gsgd.co.uk/sandbox/jquery/easing/) that inspired `vuedrops-animate` 
+Thanks to [javascript.info](https://javascript.info/) and [jQuery Easing v1.3](http://gsgd.co.uk/sandbox/jquery/easing/) that inspired `vuedrops-animate` 
