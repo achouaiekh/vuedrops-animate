@@ -30,8 +30,6 @@ export default class {
 
         for (let name in callback)
             return this.animations[name] = new Animation(this, callback[name], options)
-
-
     }
 
     play(...args) {
@@ -39,6 +37,8 @@ export default class {
         let start = new Date,
             _this = this,
             callbacks = [].concat.apply([], args)
+        
+        this.previousThen = callbacks
 
 
         for (let name of callbacks) {
@@ -102,6 +102,18 @@ export default class {
         this.options.arguments = Array.isArray(args) ? args : Array.of(args)
 
         return this
+    }
+    
+    afterAll(...names){
+        names = names || this.previousThen
+        names = names.map(name => this.promises[name]) 
+        return Promise.all(names)
+    }
+    
+    afterFirst(...names) {
+        names = names || this.previousThen
+        names = names.map(name => promises[] = this.promises[name]) 
+        return Promise.race(names) 
     }
 
     stop() {
