@@ -1,37 +1,48 @@
-
 import DEFAULTS from './options'
 
-export default class Animation{
-    constructor(animate, callback, options={}){
+export default class Animation {
+    constructor(animate, callback, options = {}) {
 
         this.animate = animate
 
-        console.log(this.animate.options)
-
         Object.assign(this.options = {}, this.animate.options, options, {callback})
 
-        for( let method in Object.keys(DEFAULTS)){
-            Animation.prototype[method] = function(value){
+        for (let method in DEFAULTS) {
+
+            this.__proto__[method] = function (value) {
+
                 this.options[method] = value
 
                 return this
             }
         }
+
     }
 
-    options(option){
+    options(option) {
         Object.assign(this.options, this.options, options)
         return this
     }
 
-    register(callback, options){
+    call(context, ...args) {
+        return this.animate.call(this, ...args)
+    }
+
+    apply(context, args = []) {
+        return this.animate.call(this, args)
+    }
+
+    register(callback, options) {
         return this.animate.register(callback, options)
     }
 
-    play(value){
+    play(value) {
         return this.animate.play(value)
     }
 
+    stop(value) {
+
+    }
 
 
 }

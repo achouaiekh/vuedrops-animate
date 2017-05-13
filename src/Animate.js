@@ -1,5 +1,6 @@
-
 import DEFAULTS from './options'
+
+import EASING from './easing'
 
 import Animation from './Animation'
 
@@ -10,39 +11,54 @@ export default class {
         console.log(DEFAULTS, options)
         this.animations = {}
         this.animationIds = {}
+        this.promises = {}
 
-        Object.assign(this.options = {}, DEFAULTS, options)
-        console.log(this.options)
+        Object.assign(this.options = {}, DEFAULTS, {context: null, arguments: []}, options)
+
+        for (let method in DEFAULTS) {
+
+            this.__proto__[method] = function (value) {
+
+                this.options[method] = value
+
+                return this
+            }
+        }
     }
 
     register(callback, options = {}) {
 
         for (let name in callback)
-            console.log(name)
             return this.animations[name] = new Animation(this, callback[name], options)
+
 
     }
 
-    play(callbacks) {
+    play(...args) {
 
         let start = new Date,
-            _this = this
+            _this = this,
+            callbacks = [].concat.apply([], args)
 
-        return new Promise((resolve, reject) => {
 
-            for (let name of callbacks) {
+        for (let name of callbacks) {
+
+
+
+            let promise =  new Promise((resolve, reject) => {
+
 
                 let options = this.animations[name].options
 
                 this.animationIds[name] = setInterval(() => {
 
-                    let t = (new Date - start) / options.speed
+                    let t = (new Date - start) / options.during
 
                     if (t > 1) t = 1
 
                     try {
 
-                        let delta = EASING[options.easing](t, 0, 1, options.speed)
+                        let delta = EASING[options.easing](t, 0, 1, options.during)
 
                         delta = options.from + delta * (options.to - options.from)
 
@@ -63,14 +79,33 @@ export default class {
                         reject(e)
                     }
 
-                }, options.step)
+                }, options.every)
 
-            }
 
-        })
+            })
+
+            this.promises[name] = new PromiseWrapper(promise, this)
+        }
+
+        return this
     }
 
-    stop(names) {
+    call(context, ...args) {
+        this.options.context = context
+        this.options.arguments = args
+
+        return this
+    }
+
+    apply(context, args = []) {
+        this.options.context = context
+        this.options.arguments = Array.isArray(args) ? args : Array.of(args)
+
+        return this
+    }
+
+    stop() {
+        let names = [].concat.apply([], arguments)
 
         for (let name of names) {
             clearInterval(this.animationIds[name])
