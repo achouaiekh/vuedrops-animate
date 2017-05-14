@@ -7,11 +7,12 @@ import Animation from './Animation'
 
 export default class {
 
-    constructor(options = {hello: 'hello'}) {
+    constructor(options = {}) {
 
         this.animations = {}
         this.animationIds = {}
         this.promises = {}
+        this.fulfilled = {}
 
         Object.assign(this.options = {}, DEFAULTS, {context: null, arguments: []}, options)
 
@@ -35,17 +36,23 @@ export default class {
     play(...args) {
 
         let start = new Date,
-            _this = this,
-            callbacks = this.flatten(args)
+            _this = this
         
-        this.previousThen = callbacks
+        this.flatten(args)
+        
+        this.previousThen = args
 
-        for (let name of callbacks) {
-
+        for (let name of args) {
+            
+            if(!this.fulfilled[name]) continue
+            
             let promise =  new Promise((resolve, reject) => {
 
-
                 let options = this.animations[name].options
+                
+                
+                
+                this.fulfilled[name] = false
 
                 this.animationIds[name] = setInterval(() => {
 
@@ -62,18 +69,14 @@ export default class {
                         options.callback.call(options.context, delta, ...options.arguments)
 
                         if (t === 1) {
-
                             _this.stop(name)
-
-                            resolve(_this)
                         }
                     }
 
                     catch (e) {
-
+                        console.log(e)
                         _this.stop(name)
 
-                        reject(e)
                     }
 
                 }, options.every)
@@ -135,11 +138,16 @@ export default class {
         for (let name of names) {
             clearInterval(this.animationIds[name])
             Promise.resolve(this.promises[name])
+            this.fulfilled[name] = true
         }
     }
     
     flatten(names){
         return names = [].concat.apply([], names)
+    }
+    
+    isFulfilled(name){
+        
     }
 }
 
