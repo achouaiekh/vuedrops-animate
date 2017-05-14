@@ -25,11 +25,11 @@ export default class Animation {
     }
 
     call(context, ...args) {
-        return this.animate.call(this, ...args)
+        return this.animate.call(this, context, ...args)
     }
 
     apply(context, args = []) {
-        return this.animate.call(this, args)
+        return this.animate.call(this, context, args)
     }
 
     register(callback, options) {
@@ -41,7 +41,7 @@ export default class Animation {
     }
 
     stop(value) {
-
+        
     }
 
 
