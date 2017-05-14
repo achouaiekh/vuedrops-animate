@@ -8,7 +8,7 @@ import Animation from './Animation'
 export default class {
 
     constructor(options = {hello: 'hello'}) {
-        console.log(DEFAULTS, options)
+
         this.animations = {}
         this.animationIds = {}
         this.promises = {}
@@ -27,7 +27,7 @@ export default class {
     }
 
     register(callback, options = {}) {
-
+        
         for (let name in callback)
             return this.animations[name] = new Animation(this, callback[name], options)
     }
@@ -36,14 +36,11 @@ export default class {
 
         let start = new Date,
             _this = this,
-            callbacks = [].concat.apply([], args)
+            callbacks = this.flatten(args)
         
         this.previousThen = callbacks
 
-
         for (let name of callbacks) {
-
-
 
             let promise =  new Promise((resolve, reject) => {
 
@@ -89,6 +86,13 @@ export default class {
 
         return this
     }
+    
+    playExcept(...args){
+        this.flatten(args)
+        args = Object.keys(this.animations).filter(name=> !args.includes(name))
+        
+        return this.play(args)
+    }
 
     call(context, ...args) {
         this.options.context = context
@@ -104,24 +108,38 @@ export default class {
         return this
     }
     
-    afterAll(...names){
-        names = names || this.previousThen
-        names = names.map(name => this.promises[name]) 
+    after(...names){
+        this.flatten(names)
+        this.previousThen = name = names || this.previousThen
+        name = names.map(name => this.promises[name]) 
         return Promise.all(names)
     }
     
+    afterAll(){
+        return Promise.all(Object.value(this.promises))
+    }
+    
     afterFirst(...names) {
-        names = names || this.previousThen
-        names = names.map(name => promises[] = this.promises[name]) 
+        this.flatten(names)
+        this.previousThen = names = names || this.previousThen
+        names = names.map(name => this.promises[name]) 
         return Promise.race(names) 
     }
 
-    stop() {
-        let names = [].concat.apply([], arguments)
+    stop(...names) {
+        
+        this.flatten(names)
+        
+        this.previousThen = names = names || this.previousThen
 
         for (let name of names) {
             clearInterval(this.animationIds[name])
+            Promise.resolve(this.promises[name])
         }
+    }
+    
+    flatten(names){
+        return names = [].concat.apply([], names)
     }
 }
 
