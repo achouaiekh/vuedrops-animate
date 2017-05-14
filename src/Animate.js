@@ -10,7 +10,7 @@ export default class {
     constructor(options = {}) {
         this.collection = {}
         this.registered = []
-
+        this.option = options
         Object.assign(this.options = {}, DEFAULTS, {context: null, arguments: []}, options)
 
         for (let method in DEFAULTS) {
@@ -49,13 +49,13 @@ export default class {
             
             let promise =  new Promise((resolve, reject) => {
 
-                let options = this.animations[name].options
+                let options = this.collection[name].options
                 
                 
                 
                 this.fulfilled[name] = false
 
-                this.animationIds[name] = setInterval(() => {
+                this.collection[name].id = setInterval(() => {
 
                     let t = (new Date - start) / options.during
 
@@ -85,7 +85,7 @@ export default class {
 
             })
 
-            this.promises[name] = new PromiseWrapper(promise, this)
+            this.collection[name].promise = new PromiseWrapper(promise, this)
         }
 
         return this
@@ -115,18 +115,18 @@ export default class {
     after(...names){
         this.flatten(names)
         this.previousThen = name = names || this.previousThen
-        name = names.map(name => this.promises[name]) 
+        name = names.map(name => this.collection[name].promise) 
         return Promise.all(names)
     }
     
     afterAll(){
-        return Promise.all(Object.value(this.promises))
+        return Promise.all(Object.value(this.collection).map(collection => collection.promise))
     }
     
     afterFirst(...names) {
         this.flatten(names)
         this.previousThen = names = names || this.previousThen
-        names = names.map(name => this.promises[name]) 
+        names = names.map(name => this.collection[name].promise) 
         return Promise.race(names) 
     }
 
@@ -137,18 +137,14 @@ export default class {
         this.previousThen = names = names || this.previousThen
 
         for (let name of names) {
-            clearInterval(this.animationIds[name])
-            Promise.resolve(this.promises[name])
+            clearInterval(this.collection[name].id)
+            Promise.resolve(this.collection[name].promise)
             this.fulfilled[name] = true
         }
     }
     
     flatten(names){
         return names = [].concat.apply([], names)
-    }
-    
-    isFulfilled(name){
-        
     }
 }
 
