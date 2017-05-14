@@ -25,11 +25,15 @@ export default class {
     }
 
     register(callback, options = {}) {
+        let names = Object.keys(callback)
+        names.forEach(name=>
+                      this.collection[name].options = Object.assign({}, options, {callback: callback[name]})
+                     )
         
-        for (let name in callback)
-            this.collection[name].options = Object.assign({}, options, {callback: callback[name]})
+        this.registered[] = names
         
-        return new OptionWrapper(Object.keys(callback), animate)
+        
+        return new OptionWrapper(names, animate)
         
         
     }
