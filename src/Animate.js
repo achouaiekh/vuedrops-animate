@@ -8,11 +8,8 @@ import Animation from './Animation'
 export default class {
 
     constructor(options = {}) {
-
-        this.animations = {}
-        this.animationIds = {}
-        this.promises = {}
-        this.fulfilled = {}
+        this.collection = {}
+        this.registered = []
 
         Object.assign(this.options = {}, DEFAULTS, {context: null, arguments: []}, options)
 
@@ -30,7 +27,11 @@ export default class {
     register(callback, options = {}) {
         
         for (let name in callback)
-            return this.animations[name] = new Animation(this, callback[name], options)
+            this.collection[name].options = Object.assign({}, options, {callback: callback[name]})
+        
+        return new OptionWrapper(Object.keys(callback), animate)
+        
+        
     }
 
     play(...args) {
