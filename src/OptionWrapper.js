@@ -20,28 +20,33 @@ export default class Animation {
     }
 
     options(option) {
-        Object.assign( this.animate.collection[name].options, this.animate.collection[name].options, options)
+        Object.assign( this.animate.collection[name].options, this.animate.options, options)
         return this
     }
 
     call(context, ...args) {
-        return this.animate.call(this, context, ...args)
+        this.names.forEach(name=> {
+            this.animate.collection[name].options.context = context
+            this.animate.collection[name].options.arguments = args
+        })
+        
+        return this
     }
 
     apply(context, args = []) {
-        return this.animate.call(this, context, args)
+        return this.call(context, ...args)
     }
 
     register(callback, options) {
         return this.animate.register(callback, options)
     }
 
-    play(value) {
-        return this.animate.play(value)
+    play(...args) {
+        return this.animate.play(args)
     }
 
-    stop(value) {
-        
+    stop(...args) {
+        return this.animate.stop(args)
     }
 
 
