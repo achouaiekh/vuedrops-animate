@@ -25,12 +25,13 @@ npm install -S vuedrops-animate
 
 ## Code Example
 ```javascript
-  import Animate from "vuedrops-animate"
+  import Animation from "vuedrops-animate"
   
-  let Animaton = new Animate({speed: 300, easing: 'linear'})
-                        .from(1)
-                        .to(3)
-                        .play(function(count){ console.log(count) })
+  let Animation = new Animation({from: 1, to: 10, during: 300, every: 10, easing: 'linear'})
+                        .animate({height: function(count){ console.log('height: ', count)})
+                        .animate({width: function(count){ console.log('width: ', count)}).from(1).to(3)
+                        .play('height', 'width')
+                        .update('height').from().to().after('width').play('height')
                         .then(function(){ console.log("Counting finished")})
 
 ```  
