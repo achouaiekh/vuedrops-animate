@@ -1,8 +1,10 @@
 import DEFAULTS from './options'
 
 export default class Animation {
-    constructor(animate, callback, options = {}) {
-
+    constructor(names, animate) {
+        
+        this.names = names
+        
         this.animate = animate
 
         Object.assign(this.options = {}, this.animate.options, options, {callback})
@@ -10,9 +12,7 @@ export default class Animation {
         for (let method in DEFAULTS) {
 
             this.__proto__[method] = function (value) {
-
-                this.options[method] = value
-
+                this.names.forEach(name => this.animate.collection[name].options[method] = value
                 return this
             }
         }
@@ -20,7 +20,7 @@ export default class Animation {
     }
 
     options(option) {
-        Object.assign(this.options, this.options, options)
+        Object.assign( this.animate.collection[name].options, this.animate.collection[name].options, options)
         return this
     }
 
