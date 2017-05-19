@@ -64,7 +64,7 @@ var VDAnimate =
 /******/ 	__webpack_require__.p = "/assets";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -77,13 +77,164 @@ var VDAnimate =
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = {
-    from: 0,
-    to: 1,
-    during: 300,
-    every: 10,
-    easing: 'linear'
-};
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _options = __webpack_require__(4);
+
+var _options2 = _interopRequireDefault(_options);
+
+var _OptionWrapper = __webpack_require__(1);
+
+var _OptionWrapper2 = _interopRequireDefault(_OptionWrapper);
+
+var _easing = __webpack_require__(3);
+
+var _easing2 = _interopRequireDefault(_easing);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Chain = function () {
+    function Chain() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+        _classCallCheck(this, Chain);
+
+        this.animationIds = {};
+        this.callbacks = {};
+        this.promises = {};
+        this.options = {};
+        this.defaultOptions = {};
+        this.registeredPromises = [];
+
+        this.previousPromise = this.nextPromises = Promise.resolve(0);
+
+        Object.assign(this.defaultOptions = {}, _options2.default, options);
+    }
+
+    _createClass(Chain, [{
+        key: 'register',
+        value: function register(callbacks) {
+            var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+            for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+                args[_key - 2] = arguments[_key];
+            }
+
+            this.setCallbacks.apply(this, [callbacks, context].concat(args));
+
+            return new _OptionWrapper2.default(this, callbacks);
+        }
+    }, {
+        key: 'setCallbacks',
+        value: function setCallbacks(callbacks) {
+            for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+                args[_key2 - 2] = arguments[_key2];
+            }
+
+            var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.defaultOptions.context;
+
+
+            for (var id in callbacks) {
+                this.callbacks[id] = {
+                    func: callbacks[id],
+                    context: context,
+                    args: args
+                };
+            }return this;
+        }
+    }, {
+        key: 'play',
+        value: function play(args) {
+            var _this2 = this;
+
+            var start = new Date(),
+                _this = this;
+
+            args.forEach(function (id) {
+
+                _this2.promises[id] = new Promise(function (resolve, reject) {
+
+                    var options = _this.options[id],
+                        callback = _this.callbacks[id],
+                        animationId = void 0;
+
+                    _this.animationIds[id] = animationId = setInterval(function () {
+
+                        var t = (new Date() - start) / options.during;
+
+                        if (t > 1) t = 1;
+
+                        try {
+                            var _callback$func;
+
+                            var delta = _easing2.default[options.easing](t, 0, 1, options.during);
+
+                            delta = options.from + delta * (options.to - options.from);
+
+                            (_callback$func = callback.func).call.apply(_callback$func, [callback.context, delta].concat(_toConsumableArray(callback.args)));
+
+                            if (t === 1) {
+                                clearInterval(animationId);
+                                resolve(id);
+                            }
+                        } catch (e) {
+                            clearInterval(animationId);
+                            reject(e);
+                        }
+                    }, options.every);
+                });
+
+                _this2.registeredPromises.push(_this2.promises[id]);
+
+                // return this.registeredPromises
+            });
+
+            return this;
+        }
+    }, {
+        key: 'then',
+        value: function then() {
+
+            this.registeredPromises = [];
+
+            this.previousPromise = this.nextPromises;
+
+            return this;
+        }
+    }, {
+        key: 'animate',
+        value: function animate() {
+            for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+                args[_key3] = arguments[_key3];
+            }
+
+            this.flatten(args);
+
+            var _this = this;
+
+            this.nextPromises = this.previousPromise.then(function () {
+                _this.play(args);
+                return Promise.all(_this.registeredPromises);
+            });
+
+            return this;
+        }
+    }, {
+        key: 'flatten',
+        value: function flatten(names) {
+            return names = [].concat.apply([], names);
+        }
+    }]);
+
+    return Chain;
+}();
+
+exports.default = Chain;
 
 /***/ }),
 /* 1 */
@@ -98,194 +249,100 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _options = __webpack_require__(0);
-
-var _options2 = _interopRequireDefault(_options);
-
-var _easing = __webpack_require__(4);
-
-var _easing2 = _interopRequireDefault(_easing);
-
-var _Animation = __webpack_require__(2);
-
-var _Animation2 = _interopRequireDefault(_Animation);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _class = function () {
-    function _class() {
-        var _this2 = this;
+var OptionWrapper = function () {
+    function OptionWrapper(chain, callbacks) {
+        _classCallCheck(this, OptionWrapper);
 
-        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { hello: 'hello' };
+        console.log(this);
 
-        _classCallCheck(this, _class);
+        this.callbacks = callbacks;
 
-        console.log(_options2.default, options);
-        this.animations = {};
-        this.animationIds = {};
+        this.chain = chain;
 
-        Object.assign(this.options = {}, _options2.default, { context: null, arguments: [] }, options);
+        this.Options = this.chain.defaultOptions;
 
-        var _loop = function _loop(method) {
+        this.options();
 
-            _this2.__proto__[method] = function (value) {
-
-                this.options[method] = value;
-
-                return this;
-            };
-        };
-
-        for (var method in _options2.default) {
-            _loop(method);
-        }
+        this.assignMethod();
     }
 
-    _createClass(_class, [{
-        key: 'register',
-        value: function register(callback) {
-            var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    _createClass(OptionWrapper, [{
+        key: "options",
+        value: function options() {
+            var _options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
+            Object.assign(this.Options, this.Options, _options);
 
-            for (var name in callback) {
-                return this.animations[name] = new _Animation2.default(this, callback[name], options);
-            }
+            this.setOptions();
+
+            return this;
         }
     }, {
-        key: 'play',
-        value: function play() {
-            var _this3 = this;
-
-            var start = new Date(),
-                _this = this,
-                callbacks = [].concat.apply([], arguments);
-
-            console.log(callbacks);
-
-            return new Promise(function (resolve, reject) {
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    var _loop2 = function _loop2() {
-                        var name = _step.value;
-
-
-                        var options = _this3.animations[name].options;
-
-                        _this3.animationIds[name] = setInterval(function () {
-
-                            var t = (new Date() - start) / options.during;
-
-                            if (t > 1) t = 1;
-
-                            try {
-                                var _options$callback;
-
-                                var delta = _easing2.default[options.easing](t, 0, 1, options.during);
-
-                                delta = options.from + delta * (options.to - options.from);
-
-                                (_options$callback = options.callback).call.apply(_options$callback, [options.context, delta].concat(_toConsumableArray(options.arguments)));
-
-                                if (t === 1) {
-
-                                    _this.stop(name);
-
-                                    resolve(_this);
-                                }
-                            } catch (e) {
-
-                                _this.stop(name);
-
-                                reject(e);
-                            }
-                        }, options.every);
-                    };
-
-                    for (var _iterator = callbacks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        _loop2();
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-            });
-        }
-    }, {
-        key: 'call',
+        key: "call",
         value: function call(context) {
-            this.options.context = context;
+            var _chain;
 
             for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
                 args[_key - 1] = arguments[_key];
             }
 
-            this.options.arguments = args;
-
-            return this;
+            return (_chain = this.chain).setCallbacks.apply(_chain, [this.callbacks, context].concat(args));
         }
     }, {
-        key: 'apply',
-        value: function apply(context) {
-            var args = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+        key: "register",
+        value: function register(callbacks, context) {
+            var _chain2;
 
-            this.options.context = context;
-            this.options.arguments = Array.isArray(args) ? args : Array.of(args);
-
-            return this;
-        }
-    }, {
-        key: 'stop',
-        value: function stop() {
-            var names = [].concat.apply([], arguments);
-
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
-
-            try {
-                for (var _iterator2 = names[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var _name = _step2.value;
-
-                    clearInterval(this.animationIds[_name]);
-                }
-            } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
-                    }
-                } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
-                    }
-                }
+            for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+                args[_key2 - 2] = arguments[_key2];
             }
+
+            return (_chain2 = this.chain).register.apply(_chain2, [callbacks, context].concat(args));
+        }
+    }, {
+        key: "animate",
+        value: function animate() {
+            var _chain3;
+
+            return (_chain3 = this.chain).animate.apply(_chain3, arguments);
+        }
+    }, {
+        key: "assignMethod",
+        value: function assignMethod(methods) {
+            var _this = this;
+
+            var _loop = function _loop(method) {
+                _this.__proto__[method] = function (v) {
+                    return _this.options(_defineProperty({}, method, v));
+                };
+            };
+
+            for (var method in this.chain.defaultOptions) {
+                _loop(method);
+            }
+        }
+    }, {
+        key: "setOptions",
+        value: function setOptions() {
+            var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.Options;
+
+
+            for (var name in this.callbacks) {
+                this.chain.options[name] = options;
+            }
+
+            return this;
         }
     }]);
 
-    return _class;
+    return OptionWrapper;
 }();
 
-exports.default = _class;
+exports.default = OptionWrapper;
 
 /***/ }),
 /* 2 */
@@ -294,100 +351,33 @@ exports.default = _class;
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
+var _chain = __webpack_require__(0);
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _options2 = __webpack_require__(0);
-
-var _options3 = _interopRequireDefault(_options2);
+var _chain2 = _interopRequireDefault(_chain);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Animation = function () {
-    function Animation(animate, callback) {
-        var _this = this;
-
-        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-        _classCallCheck(this, Animation);
-
-        this.animate = animate;
-
-        Object.assign(this.options = {}, this.animate.options, options, { callback: callback });
-
-        var _loop = function _loop(method) {
-
-            _this.__proto__[method] = function (value) {
-
-                this.options[method] = value;
-
-                return this;
-            };
-        };
-
-        for (var method in _options3.default) {
-            _loop(method);
-        }
+var chain = new _chain2.default({ every: 100 }).register({
+    height: function height(h) {
+        console.log('height: ', h);
     }
-
-    _createClass(Animation, [{
-        key: 'options',
-        value: function (_options) {
-            function options(_x) {
-                return _options.apply(this, arguments);
-            }
-
-            options.toString = function () {
-                return _options.toString();
-            };
-
-            return options;
-        }(function (option) {
-            Object.assign(this.options, this.options, options);
-            return this;
-        })
-    }, {
-        key: 'call',
-        value: function call(context) {
-            var _animate;
-
-            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                args[_key - 1] = arguments[_key];
-            }
-
-            return (_animate = this.animate).call.apply(_animate, [this].concat(args));
-        }
-    }, {
-        key: 'apply',
-        value: function apply(context) {
-            var args = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-
-            return this.animate.call(this, args);
-        }
-    }, {
-        key: 'register',
-        value: function register(callback, options) {
-            return this.animate.register(callback, options);
-        }
-    }, {
-        key: 'play',
-        value: function play(value) {
-            return this.animate.play(value);
-        }
-    }, {
-        key: 'stop',
-        value: function stop(value) {}
-    }]);
-
-    return Animation;
-}();
-
-exports.default = Animation;
+}).register({
+    width: function width(w) {
+        console.log('width: ', w);
+    }
+}).register({
+    width2: function width2(w) {
+        console.log('width2: ', w);
+    }
+}).register({
+    width3: function width3(w) {
+        console.log('width3: ', w);
+    }
+}).from(5).to(10).during(900).register({
+    width4: function width4(w) {
+        console.log('width4: ', w);
+    }
+}).animate('height', 'width').then().animate('width2').then().animate('width3');
 
 /***/ }),
 /* 3 */
@@ -396,33 +386,9 @@ exports.default = Animation;
 "use strict";
 
 
-var _Animate = __webpack_require__(1);
-
-var _Animate2 = _interopRequireDefault(_Animate);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var animation = new _Animate2.default().register({
-    height: function height(h) {
-        console.log('height: ', h);
-    }
-}).every(30).during(120).register({
-    width: function width(w) {
-        console.log('width: ', w);
-    }
-}).from(2).to(5).every(30).during(90).play(['height', 'width']);
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
 //Inspired from :->
 
 /* ============================================================
@@ -524,8 +490,8 @@ exports.default = {
         if (!p) p = d * .3;
         if (a < Math.abs(c)) {
             a = c;
-            var s = p / 4;
-        } else var s = p / (2 * Math.PI) * Math.asin(c / a);
+            s = p / 4;
+        } else s = p / (2 * Math.PI) * Math.asin(c / a);
         return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
     },
     easeOutElastic: function easeOutElastic(t, b, c, d) {
@@ -537,8 +503,8 @@ exports.default = {
         if (!p) p = d * .3;
         if (a < Math.abs(c)) {
             a = c;
-            var s = p / 4;
-        } else var s = p / (2 * Math.PI) * Math.asin(c / a);
+            s = p / 4;
+        } else s = p / (2 * Math.PI) * Math.asin(c / a);
         return a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b;
     },
     easeInOutElastic: function easeInOutElastic(t, b, c, d) {
@@ -550,8 +516,8 @@ exports.default = {
         if (!p) p = d * (.3 * 1.5);
         if (a < Math.abs(c)) {
             a = c;
-            var s = p / 4;
-        } else var s = p / (2 * Math.PI) * Math.asin(c / a);
+            s = p / 4;
+        } else s = p / (2 * Math.PI) * Math.asin(c / a);
         if (t < 1) return -.5 * (a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
         return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * .5 + c + b;
     },
@@ -586,6 +552,25 @@ exports.default = {
         if (t < d / 2) return EASING.easeInBounce(x, t * 2, 0, c, d) * .5 + b;
         return EASING.easeOutBounce(x, t * 2 - d, 0, c, d) * .5 + c * .5 + b;
     }
+};
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    from: 0,
+    to: 1,
+    during: 300,
+    every: 10,
+    easing: 'linear',
+    context: null
 };
 
 /***/ })

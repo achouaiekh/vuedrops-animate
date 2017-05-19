@@ -1,19 +1,28 @@
 export default class PromiseWrapper{
-    constructor(name, promise, animate){
-        this.name = name
+
+    constructor(promise, animate){
+
         this.animate = animate
         this.promise = promise
     }
 
     play(...args){
+
+        let _this = this
+
         this.promise.then(function(animate){
-            this.animate.play(...args)
+            _this.animate.play(...args)
         })
+
+        return this.animate
     }
     
     stop(...args){
+
         this.promise.then(function(animate){
-            this.animate.stop(...args)
+            animate.stop(...args)
         })
+
+        return this.animate
     }
 }

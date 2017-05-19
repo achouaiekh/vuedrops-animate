@@ -1,53 +1,68 @@
-import DEFAULTS from './options'
+export default class OptionWrapper {
 
-export default class Animation {
-    constructor(names, animate) {
-        
-        this.names = names
-        
-        this.animate = animate
+    constructor(chain, callbacks) {
 
-        Object.assign(this.options = {}, this.animate.options, options, {callback})
+        console.log(this)
 
-        for (let method in DEFAULTS) {
+        this.callbacks = callbacks
 
-            this.__proto__[method] = function (value) {
-                this.names.forEach(name => this.animate.collection[name].options[method] = value
-                return this
-            }
-        }
+        this.chain = chain
+
+        this.Options = this.chain.defaultOptions
+
+        this.options()
+
+
+
+        this.assignMethod()
+
+
 
     }
 
-    options(option) {
-        Object.assign( this.animate.collection[name].options, this.animate.options, options)
+    options(options = {}) {
+
+        Object.assign(this.Options, this.Options, options)
+
+        this.setOptions()
+
         return this
     }
 
     call(context, ...args) {
-        this.names.forEach(name=> {
-            this.animate.collection[name].options.context = context
-            this.animate.collection[name].options.arguments = args
-        })
-        
+
+        return this.chain.setCallbacks(this.callbacks, context, ...args)
+    }
+
+
+    register(callbacks, context, ...args) {
+
+        return this.chain.register(callbacks, context, ...args)
+
+    }
+
+    animate(...args) {
+
+        return this.chain.animate(...args)
+    }
+
+
+    assignMethod(methods) {
+
+        for (let method in this.chain.defaultOptions)
+            this.__proto__[method] = (v) => {
+                return this.options({[method]: v})
+            }
+
+    }
+
+    setOptions(options = this.Options) {
+
+        for (let name in this.callbacks) {
+            this.chain.options[name] = options
+        }
+
         return this
     }
-
-    apply(context, args = []) {
-        return this.call(context, ...args)
-    }
-
-    register(callback, options) {
-        return this.animate.register(callback, options)
-    }
-
-    play(...args) {
-        return this.animate.play(args)
-    }
-
-    stop(...args) {
-        return this.animate.stop(args)
-    }
-
 
 }

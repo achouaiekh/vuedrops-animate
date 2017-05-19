@@ -4,4 +4,5 @@ export default {
     during: 300,
     every: 10,
     easing: 'linear',
+    context: null
 }
