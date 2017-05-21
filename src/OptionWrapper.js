@@ -2,8 +2,6 @@ export default class OptionWrapper {
 
     constructor(chain, callbacks) {
 
-        console.log(this)
-
         this.callbacks = callbacks
 
         this.chain = chain
@@ -11,8 +9,6 @@ export default class OptionWrapper {
         this.Options = this.chain.defaultOptions
 
         this.options()
-
-
 
         this.assignMethod()
 
@@ -22,7 +18,7 @@ export default class OptionWrapper {
 
     options(options = {}) {
 
-        Object.assign(this.Options, this.Options, options)
+        this.Options = Object.assign({}, this.Options, options)
 
         this.setOptions()
 
@@ -59,7 +55,9 @@ export default class OptionWrapper {
     setOptions(options = this.Options) {
 
         for (let name in this.callbacks) {
+
             this.chain.options[name] = options
+
         }
 
         return this

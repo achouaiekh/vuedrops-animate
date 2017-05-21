@@ -5,14 +5,15 @@ import EASING from './easing'
 export default class Chain {
 
     constructor(options = {}) {
+
         this.animationIds = {}
         this.callbacks = {}
         this.promises = {}
         this.options = {}
+
         this.defaultOptions = {}
+
         this.registeredPromises = []
-
-
         this.previousPromise = this.nextPromises = Promise.resolve(0)
 
         Object.assign(this.defaultOptions = {}, DEFAULT_OPTIONS, options)
@@ -28,6 +29,7 @@ export default class Chain {
     setCallbacks(callbacks, context = this.defaultOptions.context, ...args) {
 
         for (let id in callbacks)
+
             this.callbacks[id] = {
                 func: callbacks[id],
                 context,
@@ -44,7 +46,6 @@ export default class Chain {
         let start = new Date,
             _this = this
 
-
         args.forEach(id => {
 
             this.promises[id] = new Promise((resolve, reject) => {
@@ -53,7 +54,11 @@ export default class Chain {
                     callback = _this.callbacks[id],
                     animationId
 
-                _this.animationIds[id] = animationId = setInterval(() => {
+                _this.animationIds[id] = {}
+
+                _this.animationIds[id].cleared = false
+
+                _this.animationIds[id].id = animationId = setInterval(() => {
 
                     let t = (new Date - start) / options.during
 
@@ -67,13 +72,15 @@ export default class Chain {
 
                         callback.func.call(callback.context, delta, ...callback.args)
 
-                        if (t === 1) {
+                        if (t === 1 || _this.animationIds[id].cleared) {
+                            _this.animationIds[id].cleared = true
                             clearInterval(animationId)
                             resolve(id)
                         }
                     }
 
                     catch (e) {
+                        _this.animationIds[id].cleared = true
                         clearInterval(animationId)
                         reject(e)
 
@@ -110,7 +117,9 @@ export default class Chain {
         let _this = this
 
         this.nextPromises = this.previousPromise.then(function () {
+
             _this.play(args)
+
             return Promise.all(_this.registeredPromises)
         })
 
@@ -119,7 +128,14 @@ export default class Chain {
     }
 
     flatten(names) {
+
         return names = [].concat.apply([], names)
+    }
+
+    stop(...args) {
+
+        this.flatten(args)
+            .forEach(id => this.animationIds[id].cleared = true)
     }
 
 }
