@@ -130,7 +130,9 @@ export default class Chain {
     stop(...args) {
 
         this.flatten(args)
-            .forEach(id => this.animationIds[id].cleared = true)
+            .forEach(id => {
+                if(this.animationIds[id] !== undefined)  this.animationIds[id].cleared = true
+            })
     }
 
 }
