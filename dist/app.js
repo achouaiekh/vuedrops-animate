@@ -78,8 +78,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _options = __webpack_require__(4);
@@ -124,14 +122,15 @@ var Chain = function () {
         value: function register(callbacks, options) {
             var _this2 = this;
 
-            console.log(typeof callbacks === 'undefined' ? 'undefined' : _typeof(callbacks));
-
             if (Array.isArray(callbacks)) {
-                var callbacksO = {};
+
+                var temp = {};
+
                 callbacks.forEach(function (v) {
-                    return callbacksO[v] = _this2.options[v].function;
+                    return temp[v] = _this2.options[v].function;
                 });
-                callbacks = callbacksO;
+
+                callbacks = temp;
             }
 
             return new _OptionWrapper2.default(this, callbacks);
@@ -192,11 +191,13 @@ var Chain = function () {
         }
     }, {
         key: 'then',
-        value: function then() {
+        value: function then(callback) {
 
             this.registeredPromises = [];
 
             this.previousPromise = this.nextPromises;
+
+            if (typeof callback === 'function') this.previousPromise.then(callback);
 
             return this;
         }
@@ -390,7 +391,9 @@ var chain = new _chain2.default({ every: 100 }).register({
     width4: function width4(w) {
         console.log('width4: ', w);
     }
-}).animate('height', 'width').then().animate('width2').then().animate('width3').then().animate('width4').register(['width']).from(5).to(10).animate('width');
+}).animate('height', 'width').then().animate('width2').then(function () {
+    console.log('then initiated');
+}).animate('width3').then().animate('width4').register(['width']).from(5).to(10).animate('width');
 
 document.querySelector('#stop').addEventListener('click', function (event) {
     chain.stop('width3');

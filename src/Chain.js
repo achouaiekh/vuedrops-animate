@@ -34,7 +34,6 @@ export default class Chain {
     }
 
 
-
     play(args) {
 
         let start = new Date,
@@ -94,11 +93,14 @@ export default class Chain {
         return this
     }
 
-    then() {
+    then(callback) {
 
         this.registeredPromises = []
 
         this.previousPromise = this.nextPromises
+
+        if (typeof callback === 'function') this.previousPromise.then(callback)
+
 
         return this
     }

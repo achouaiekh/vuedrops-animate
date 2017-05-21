@@ -23,7 +23,9 @@ let chain = new Chain({every: 100})
         width4: function (w) {
             console.log('width4: ', w)
         }
-    }).animate('height', 'width').then().animate('width2').then().animate('width3').then().animate('width4').register(['width']).from(5).to(10).animate('width')
+    }).animate('height', 'width').then().animate('width2').then(function () {
+        console.log('then initiated')
+    }).animate('width3').then().animate('width4').register(['width']).from(5).to(10).animate('width')
 
 
 document.querySelector('#stop').addEventListener('click', function(event){
