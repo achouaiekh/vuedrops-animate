@@ -19,26 +19,20 @@ export default class Chain {
         Object.assign(this.defaultOptions = {}, DEFAULT_OPTIONS, options)
     }
 
-    register(callbacks, context = null, ...args) {
+    register(callbacks, options) {
 
-        this.setCallbacks(callbacks, context, ...args)
+        if (Array.isArray(callbacks)) {
+
+            let temp = {}
+
+            callbacks.forEach(v => temp[v] = this.options[v].function)
+
+            callbacks = temp
+        }
 
         return new OptionWrapper(this, callbacks)
     }
 
-    setCallbacks(callbacks, context = this.defaultOptions.context, ...args) {
-
-        for (let id in callbacks)
-
-            this.callbacks[id] = {
-                func: callbacks[id],
-                context,
-                args
-            }
-
-        return this
-
-    }
 
 
     play(args) {
@@ -51,7 +45,6 @@ export default class Chain {
             this.promises[id] = new Promise((resolve, reject) => {
 
                 let options = _this.options[id],
-                    callback = _this.callbacks[id],
                     animationId
 
                 _this.animationIds[id] = {}
@@ -70,7 +63,7 @@ export default class Chain {
 
                         delta = options.from + delta * (options.to - options.from)
 
-                        callback.func.call(callback.context, delta, ...callback.args)
+                        options.function.call(options.context, delta, ...options.arguments)
 
                         if (t === 1 || _this.animationIds[id].cleared) {
                             _this.animationIds[id].cleared = true

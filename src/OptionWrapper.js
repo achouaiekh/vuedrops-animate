@@ -13,7 +13,6 @@ export default class OptionWrapper {
         this.assignMethod()
 
 
-
     }
 
     options(options = {}) {
@@ -27,7 +26,13 @@ export default class OptionWrapper {
 
     call(context, ...args) {
 
-        return this.chain.setCallbacks(this.callbacks, context, ...args)
+        this.arguments(...args)
+        this.context(context)
+    }
+
+    arguments(...args) {
+
+        this.options({arguments: args})
     }
 
 
@@ -45,10 +50,11 @@ export default class OptionWrapper {
 
     assignMethod(methods) {
 
-        for (let method in this.chain.defaultOptions)
-            this.__proto__[method] = (v) => {
-                return this.options({[method]: v})
-            }
+        ['from', 'to', 'easing', 'during', 'every', 'context'].forEach(method =>
+            this.__proto__[method] = (v) =>
+                this.options({[method]: v})
+        )
+
 
     }
 
@@ -56,7 +62,7 @@ export default class OptionWrapper {
 
         for (let name in this.callbacks) {
 
-            this.chain.options[name] = options
+            this.chain.options[name] = Object.assign({}, options, {function: this.callbacks[name]})
 
         }
 
