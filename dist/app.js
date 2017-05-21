@@ -64,191 +64,11 @@ var VDAnimate =
 /******/ 	__webpack_require__.p = "/assets";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _options = __webpack_require__(4);
-
-var _options2 = _interopRequireDefault(_options);
-
-var _OptionWrapper = __webpack_require__(1);
-
-var _OptionWrapper2 = _interopRequireDefault(_OptionWrapper);
-
-var _easing = __webpack_require__(3);
-
-var _easing2 = _interopRequireDefault(_easing);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Chain = function () {
-    function Chain() {
-        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-        _classCallCheck(this, Chain);
-
-        this.animationIds = {};
-        this.callbacks = {};
-        this.promises = {};
-        this.options = {};
-
-        this.defaultOptions = {};
-
-        this.registeredPromises = [];
-        this.previousPromise = this.nextPromises = Promise.resolve(0);
-
-        Object.assign(this.defaultOptions = {}, _options2.default, options);
-    }
-
-    _createClass(Chain, [{
-        key: 'register',
-        value: function register(callbacks, options) {
-            var _this2 = this;
-
-            if (Array.isArray(callbacks)) {
-
-                var temp = {};
-
-                callbacks.forEach(function (v) {
-                    return temp[v] = _this2.options[v].function;
-                });
-
-                callbacks = temp;
-            }
-
-            return new _OptionWrapper2.default(this, callbacks);
-        }
-    }, {
-        key: 'play',
-        value: function play(args) {
-            var _this3 = this;
-
-            var start = new Date(),
-                _this = this;
-
-            args.forEach(function (id) {
-
-                _this3.promises[id] = new Promise(function (resolve, reject) {
-
-                    var options = _this.options[id],
-                        animationId = void 0;
-
-                    _this.animationIds[id] = {};
-
-                    _this.animationIds[id].cleared = false;
-
-                    _this.animationIds[id].id = animationId = setInterval(function () {
-
-                        var t = (new Date() - start) / options.during;
-
-                        if (t > 1) t = 1;
-
-                        try {
-                            var _options$function;
-
-                            var delta = _easing2.default[options.easing](t, 0, 1, options.during);
-
-                            delta = options.from + delta * (options.to - options.from);
-
-                            (_options$function = options.function).call.apply(_options$function, [options.context, delta].concat(_toConsumableArray(options.arguments)));
-
-                            if (t === 1 || _this.animationIds[id].cleared) {
-                                _this.animationIds[id].cleared = true;
-                                clearInterval(animationId);
-                                resolve(id);
-                            }
-                        } catch (e) {
-                            _this.animationIds[id].cleared = true;
-                            clearInterval(animationId);
-                            reject(e);
-                        }
-                    }, options.every);
-                });
-
-                _this3.registeredPromises.push(_this3.promises[id]);
-
-                // return this.registeredPromises
-            });
-
-            return this;
-        }
-    }, {
-        key: 'then',
-        value: function then(callback) {
-
-            this.registeredPromises = [];
-
-            this.previousPromise = this.nextPromises;
-
-            if (typeof callback === 'function') this.previousPromise.then(callback);
-
-            return this;
-        }
-    }, {
-        key: 'animate',
-        value: function animate() {
-            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-                args[_key] = arguments[_key];
-            }
-
-            this.flatten(args);
-
-            var _this = this;
-
-            this.nextPromises = this.previousPromise.then(function () {
-
-                _this.play(args);
-
-                return Promise.all(_this.registeredPromises);
-            });
-
-            return this;
-        }
-    }, {
-        key: 'flatten',
-        value: function flatten(names) {
-
-            return names = [].concat.apply([], names);
-        }
-    }, {
-        key: 'stop',
-        value: function stop() {
-            var _this4 = this;
-
-            for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-                args[_key2] = arguments[_key2];
-            }
-
-            this.flatten(args).forEach(function (id) {
-                return _this4.animationIds[id].cleared = true;
-            });
-        }
-    }]);
-
-    return Chain;
-}();
-
-exports.default = Chain;
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -359,48 +179,7 @@ var OptionWrapper = function () {
 exports.default = OptionWrapper;
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _chain = __webpack_require__(0);
-
-var _chain2 = _interopRequireDefault(_chain);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var chain = new _chain2.default({ every: 100 }).register({
-    height: function height(h) {
-        console.log('height: ', h);
-    }
-}).register({
-    width: function width(w) {
-        console.log('width: ', w);
-    }
-}).register({
-    width2: function width2(w) {
-        console.log('width2: ', w);
-    }
-}).register({
-    width3: function width3(w) {
-        console.log('width3: ', w);
-    }
-}).from(5).to(10).during(900).register({
-    width4: function width4(w) {
-        console.log('width4: ', w);
-    }
-}).animate('height', 'width').then().animate('width2').then(function () {
-    console.log('then initiated');
-}).animate('width3').then().animate('width4').register(['width']).from(5).to(10).animate('width');
-
-document.querySelector('#stop').addEventListener('click', function (event) {
-    chain.stop('width3');
-});
-
-/***/ }),
-/* 3 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -575,7 +354,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -595,6 +374,186 @@ exports.default = {
     arguments: []
 
 };
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _options = __webpack_require__(2);
+
+var _options2 = _interopRequireDefault(_options);
+
+var _OptionWrapper = __webpack_require__(0);
+
+var _OptionWrapper2 = _interopRequireDefault(_OptionWrapper);
+
+var _easing = __webpack_require__(1);
+
+var _easing2 = _interopRequireDefault(_easing);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Chain = function () {
+    function Chain() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+        _classCallCheck(this, Chain);
+
+        this.animationIds = {};
+        this.callbacks = {};
+        this.promises = {};
+        this.options = {};
+
+        this.defaultOptions = {};
+
+        this.registeredPromises = [];
+        this.previousPromise = this.nextPromises = Promise.resolve(0);
+
+        Object.assign(this.defaultOptions = {}, _options2.default, options);
+    }
+
+    _createClass(Chain, [{
+        key: 'register',
+        value: function register(callbacks, options) {
+            var _this2 = this;
+
+            if (Array.isArray(callbacks)) {
+
+                var temp = {};
+
+                callbacks.forEach(function (v) {
+                    return temp[v] = _this2.options[v].function;
+                });
+
+                callbacks = temp;
+            }
+
+            return new _OptionWrapper2.default(this, callbacks);
+        }
+    }, {
+        key: 'play',
+        value: function play(args) {
+            var _this3 = this;
+
+            var start = new Date(),
+                _this = this;
+
+            args.forEach(function (id) {
+
+                _this3.promises[id] = new Promise(function (resolve, reject) {
+
+                    var options = _this.options[id],
+                        animationId = void 0;
+
+                    _this.animationIds[id] = {};
+
+                    _this.animationIds[id].cleared = false;
+
+                    _this.animationIds[id].id = animationId = setInterval(function () {
+
+                        var t = (new Date() - start) / options.during;
+
+                        if (t > 1) t = 1;
+
+                        try {
+                            var _options$function;
+
+                            var delta = _easing2.default[options.easing](t, 0, 1, options.during);
+
+                            delta = options.from + delta * (options.to - options.from);
+
+                            (_options$function = options.function).call.apply(_options$function, [options.context, delta].concat(_toConsumableArray(options.arguments)));
+
+                            if (t === 1 || _this.animationIds[id].cleared) {
+                                _this.animationIds[id].cleared = true;
+                                clearInterval(animationId);
+                                resolve(id);
+                            }
+                        } catch (e) {
+                            _this.animationIds[id].cleared = true;
+                            clearInterval(animationId);
+                            reject(e);
+                        }
+                    }, options.every);
+                });
+
+                _this3.registeredPromises.push(_this3.promises[id]);
+
+                // return this.registeredPromises
+            });
+
+            return this;
+        }
+    }, {
+        key: 'then',
+        value: function then(callback) {
+
+            this.registeredPromises = [];
+
+            this.previousPromise = this.nextPromises;
+
+            if (typeof callback === 'function') this.previousPromise.then(callback);
+
+            return this;
+        }
+    }, {
+        key: 'animate',
+        value: function animate() {
+            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                args[_key] = arguments[_key];
+            }
+
+            this.flatten(args);
+
+            var _this = this;
+
+            this.nextPromises = this.previousPromise.then(function () {
+
+                _this.play(args);
+
+                return Promise.all(_this.registeredPromises);
+            });
+
+            return this;
+        }
+    }, {
+        key: 'flatten',
+        value: function flatten(names) {
+
+            return names = [].concat.apply([], names);
+        }
+    }, {
+        key: 'stop',
+        value: function stop() {
+            var _this4 = this;
+
+            for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+                args[_key2] = arguments[_key2];
+            }
+
+            this.flatten(args).forEach(function (id) {
+                return _this4.animationIds[id].cleared = true;
+            });
+        }
+    }]);
+
+    return Chain;
+}();
+
+exports.default = Chain;
 
 /***/ })
 /******/ ]);
