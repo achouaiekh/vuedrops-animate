@@ -27,21 +27,16 @@ npm install -S vuedrops-animate
 ```javascript
   import Animation from "vuedrops-animate"
   
-  let Animation = new Animation({from: 1, to: 10, during: 300, every: 10, easing: 'linear'})
-                        .animate({height: function(count){ console.log('height: ', count)})
-                        .animate({width: function(count){ console.log('width: ', count)}).from(1).to(3)
-                        .play('height', 'width')
-                        .update('height').from().to().after('width').play('height')
-                        .then(function(){ console.log("Counting finished")})
+  let Animation = new Animation({from: 1, to: 10, during: 300, every: 10, easing: 'linear'}) // this will be the default options for every animation regestry
+                        .register({height: function(count){ console.log('height: ', count)}}) // register the first callback
+                        .register({width: function(count){ console.log('width: ', count)}}).from(1).to(3) // register the second callback to animate the value from 1 to 3
+                        .animate('height', 'width') // play the animation for the two callback
+                        .then().animate('height').from(5).to(10)  // after the previous two animation are completed we start the height animation again
+                        .then(function(){ console.log("Counting finished")}) // after the height animation is completed we trigger the callback 
 
 ```  
 
-> the result will be:
->
->     1
->     2   
->     3
->     Counting finished
+
 
 ## API
 ### Options

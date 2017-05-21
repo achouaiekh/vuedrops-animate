@@ -47,6 +47,16 @@ export default class OptionWrapper {
         return this.chain.animate(...args)
     }
 
+    then(callback) {
+
+        return this.chain.then(callback)
+    }
+
+    stop(...args) {
+
+        return this.chain.stop(...args)
+    }
+
 
     assignMethod(methods) {
 
