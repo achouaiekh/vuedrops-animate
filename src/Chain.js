@@ -93,13 +93,13 @@ export default class Chain {
         return this
     }
 
-    then(callback) {
+    then(callback, context = this) {
 
         this.registeredPromises = []
 
         this.previousPromise = this.nextPromises
 
-        if (typeof callback === 'function') this.previousPromise.then(callback)
+        if (typeof callback === 'function') this.previousPromise.then(this.proxy(callback, context))
 
 
         return this
@@ -120,6 +120,12 @@ export default class Chain {
 
 
         return this
+    }
+
+    proxy(fn, object = this) {
+        return function () {
+            return fn.apply(object, arguments)
+        }
     }
 
     flatten(names) {
