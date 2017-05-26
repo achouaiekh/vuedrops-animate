@@ -58,7 +58,7 @@ export default class Chain {
 
                     try {
 
-                        let delta = EASING[options.easing](t, 0, 1, options.during)
+                        let delta = EASING[options.easing](t, t * options.during, 0, 1, options.during)
 
                         delta = options.from + delta * (options.to - options.from)
 
@@ -137,7 +137,7 @@ export default class Chain {
 
         this.flatten(args)
             .forEach(id => {
-                if(this.animationIds[id] !== undefined)  this.animationIds[id].cleared = true
+                if (this.animationIds[id] !== undefined) this.animationIds[id].cleared = true
             })
     }
 
