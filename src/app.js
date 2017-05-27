@@ -1,7 +1,7 @@
 import Chain from './chain'
 
 
-let chain = new Chain({every: 100})
+let chain = new Chain({every: 100, easing: 'easeInElastic'})
     .register({
         height: function (h) {
             console.log('height: ', h)
