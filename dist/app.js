@@ -1,4 +1,4 @@
-var VDAnimate =
+var VDAnimation =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -201,168 +201,138 @@ exports.default = OptionWrapper;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-//Inspired from :------>
-
-/* ============================================================
- * jQuery Easing v1.3 - http://gsgd.co.uk/sandbox/jquery/easing/
- *
+/*
+ * jQuery Easing v1.4.0 - http://gsgd.co.uk/sandbox/jquery/easing/
  * Open source under the BSD License.
- *
  * Copyright © 2008 George McGinley Smith
  * All rights reserved.
- * https://raw.github.com/danro/jquery-easing/master/LICENSE
- * ======================================================== */
+ * https://raw.github.com/gdsmith/jquery-easing/master/LICENSE
+ */
+
+// Preserve the original jQuery "swing" easing as "jswing"
+$.easing['jswing'] = $.easing['swing'];
+
+var pow = Math.pow,
+    sqrt = Math.sqrt,
+    sin = Math.sin,
+    cos = Math.cos,
+    PI = Math.PI,
+    c1 = 1.70158,
+    c2 = c1 * 1.525,
+    c3 = c1 + 1,
+    c4 = 2 * PI / 3,
+    c5 = 2 * PI / 4.5;
+
+// x is the fraction of animation progress, in the range 0..1
+function bounceOut(x) {
+    var n1 = 7.5625,
+        d1 = 2.75;
+    if (x < 1 / d1) {
+        return n1 * x * x;
+    } else if (x < 2 / d1) {
+        return n1 * (x -= 1.5 / d1) * x + .75;
+    } else if (x < 2.5 / d1) {
+        return n1 * (x -= 2.25 / d1) * x + .9375;
+    } else {
+        return n1 * (x -= 2.625 / d1) * x + .984375;
+    }
+}
 
 exports.default = {
-    // t: current time, b: beginning value, c: change In value, d: duration
+    linear: function linear(x) {
+        return x;
+    },
+    swing: function swing(x) {
+        return x * x;
+    },
+    easeInQuad: function easeInQuad(x) {
+        return x * x;
+    },
+    easeOutQuad: function easeOutQuad(x) {
+        return 1 - (1 - x) * (1 - x);
+    },
+    easeInOutQuad: function easeInOutQuad(x) {
+        return x < 0.5 ? 2 * x * x : 1 - pow(-2 * x + 2, 2) / 2;
+    },
+    easeInCubic: function easeInCubic(x) {
+        return x * x * x;
+    },
+    easeOutCubic: function easeOutCubic(x) {
+        return 1 - pow(1 - x, 3);
+    },
+    easeInOutCubic: function easeInOutCubic(x) {
+        return x < 0.5 ? 4 * x * x * x : 1 - pow(-2 * x + 2, 3) / 2;
+    },
+    easeInQuart: function easeInQuart(x) {
+        return x * x * x * x;
+    },
+    easeOutQuart: function easeOutQuart(x) {
+        return 1 - pow(1 - x, 4);
+    },
+    easeInOutQuart: function easeInOutQuart(x) {
+        return x < 0.5 ? 8 * x * x * x * x : 1 - pow(-2 * x + 2, 4) / 2;
+    },
+    easeInQuint: function easeInQuint(x) {
+        return x * x * x * x * x;
+    },
+    easeOutQuint: function easeOutQuint(x) {
+        return 1 - pow(1 - x, 5);
+    },
+    easeInOutQuint: function easeInOutQuint(x) {
+        return x < 0.5 ? 16 * x * x * x * x * x : 1 - pow(-2 * x + 2, 5) / 2;
+    },
+    easeInSine: function easeInSine(x) {
+        return 1 - cos(x * PI / 2);
+    },
+    easeOutSine: function easeOutSine(x) {
+        return sin(x * PI / 2);
+    },
+    easeInOutSine: function easeInOutSine(x) {
+        return -(cos(PI * x) - 1) / 2;
+    },
+    easeInExpo: function easeInExpo(x) {
+        return x === 0 ? 0 : pow(2, 10 * x - 10);
+    },
+    easeOutExpo: function easeOutExpo(x) {
+        return x === 1 ? 1 : 1 - pow(2, -10 * x);
+    },
+    easeInOutExpo: function easeInOutExpo(x) {
+        return x === 0 ? 0 : x === 1 ? 1 : x < 0.5 ? pow(2, 20 * x - 10) / 2 : (2 - pow(2, -20 * x + 10)) / 2;
+    },
+    easeInCirc: function easeInCirc(x) {
+        return 1 - sqrt(1 - pow(x, 2));
+    },
+    easeOutCirc: function easeOutCirc(x) {
+        return sqrt(1 - pow(x - 1, 2));
+    },
+    easeInOutCirc: function easeInOutCirc(x) {
+        return x < 0.5 ? (1 - sqrt(1 - pow(2 * x, 2))) / 2 : (sqrt(1 - pow(-2 * x + 2, 2)) + 1) / 2;
+    },
+    easeInElastic: function easeInElastic(x) {
+        return x === 0 ? 0 : x === 1 ? 1 : -pow(2, 10 * x - 10) * sin((x * 10 - 10.75) * c4);
+    },
+    easeOutElastic: function easeOutElastic(x) {
+        return x === 0 ? 0 : x === 1 ? 1 : pow(2, -10 * x) * sin((x * 10 - 0.75) * c4) + 1;
+    },
+    easeInOutElastic: function easeInOutElastic(x) {
+        return x === 0 ? 0 : x === 1 ? 1 : x < 0.5 ? -(pow(2, 20 * x - 10) * sin((20 * x - 11.125) * c5)) / 2 : pow(2, -20 * x + 10) * sin((20 * x - 11.125) * c5) / 2 + 1;
+    },
+    easeInBack: function easeInBack(x) {
+        return c3 * x * x * x - c1 * x * x;
+    },
+    easeOutBack: function easeOutBack(x) {
+        return 1 + c3 * pow(x - 1, 3) + c1 * pow(x - 1, 2);
+    },
+    easeInOutBack: function easeInOutBack(x) {
+        return x < 0.5 ? pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2) / 2 : (pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2;
+    },
+    easeInBounce: function easeInBounce(x) {
+        return 1 - bounceOut(1 - x);
+    },
 
-    linear: function linear(t) {
-        return t;
-    },
-    swing: function swing(t) {
-        return 0.5 - Math.cos(p * Math.PI) / 2;
-    },
-    easeInQuad: function easeInQuad(x, t, b, c, d) {
-        return c * (t /= d) * t + b;
-    },
-    easeOutQuad: function easeOutQuad(x, t, b, c, d) {
-        return -c * (t /= d) * (t - 2) + b;
-    },
-    easeInOutQuad: function easeInOutQuad(x, t, b, c, d) {
-        if ((t /= d / 2) < 1) return c / 2 * t * t + b;
-        return -c / 2 * (--t * (t - 2) - 1) + b;
-    },
-    easeInCubic: function easeInCubic(x, t, b, c, d) {
-        return c * (t /= d) * t * t + b;
-    },
-    easeOutCubic: function easeOutCubic(x, t, b, c, d) {
-        return c * ((t = t / d - 1) * t * t + 1) + b;
-    },
-    easeInOutCubic: function easeInOutCubic(x, t, b, c, d) {
-        if ((t /= d / 2) < 1) return c / 2 * t * t * t + b;
-        return c / 2 * ((t -= 2) * t * t + 2) + b;
-    },
-    easeInQuart: function easeInQuart(x, t, b, c, d) {
-        return c * (t /= d) * t * t * t + b;
-    },
-    easeOutQuart: function easeOutQuart(x, t, b, c, d) {
-        return -c * ((t = t / d - 1) * t * t * t - 1) + b;
-    },
-    easeInOutQuart: function easeInOutQuart(x, t, b, c, d) {
-        if ((t /= d / 2) < 1) return c / 2 * t * t * t * t + b;
-        return -c / 2 * ((t -= 2) * t * t * t - 2) + b;
-    },
-    easeInQuint: function easeInQuint(x, t, b, c, d) {
-        return c * (t /= d) * t * t * t * t + b;
-    },
-    easeOutQuint: function easeOutQuint(x, t, b, c, d) {
-        return c * ((t = t / d - 1) * t * t * t * t + 1) + b;
-    },
-    easeInOutQuint: function easeInOutQuint(x, t, b, c, d) {
-        if ((t /= d / 2) < 1) return c / 2 * t * t * t * t * t + b;
-        return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
-    },
-    easeInSine: function easeInSine(x, t, b, c, d) {
-        return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
-    },
-    easeOutSine: function easeOutSine(x, t, b, c, d) {
-        return c * Math.sin(t / d * (Math.PI / 2)) + b;
-    },
-    easeInOutSine: function easeInOutSine(x, t, b, c, d) {
-        return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
-    },
-    easeInExpo: function easeInExpo(x, t, b, c, d) {
-        return t == 0 ? b : c * Math.pow(2, 10 * (t / d - 1)) + b;
-    },
-    easeOutExpo: function easeOutExpo(x, t, b, c, d) {
-        return t == d ? b + c : c * (-Math.pow(2, -10 * t / d) + 1) + b;
-    },
-    easeInOutExgitpo: function easeInOutExgitpo(x, t, b, c, d) {
-        if (t == 0) return b;
-        if (t == d) return b + c;
-        if ((t /= d / 2) < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
-        return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
-    },
-    easeInCirc: function easeInCirc(x, t, b, c, d) {
-        return -c * (Math.sqrt(1 - (t /= d) * t) - 1) + b;
-    },
-    easeOutCirc: function easeOutCirc(x, t, b, c, d) {
-        return c * Math.sqrt(1 - (t = t / d - 1) * t) + b;
-    },
-    easeInOutCirc: function easeInOutCirc(x, t, b, c, d) {
-        if ((t /= d / 2) < 1) return -c / 2 * (Math.sqrt(1 - t * t) - 1) + b;
-        return c / 2 * (Math.sqrt(1 - (t -= 2) * t) + 1) + b;
-    },
-    easeInElastic: function easeInElastic(x, t, b, c, d) {
-        var s = 1.70158;
-        var p = 0;
-        var a = c;
-        if (t == 0) return b;
-        if ((t /= d) == 1) return b + c;
-        if (!p) p = d * .3;
-        if (a < Math.abs(c)) {
-            a = c;
-            s = p / 4;
-        } else s = p / (2 * Math.PI) * Math.asin(c / a);
-        return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
-    },
-    easeOutElastic: function easeOutElastic(x, t, b, c, d) {
-        var s = 1.70158;
-        var p = 0;
-        var a = c;
-        if (t == 0) return b;
-        if ((t /= d) == 1) return b + c;
-        if (!p) p = d * .3;
-        if (a < Math.abs(c)) {
-            a = c;
-            s = p / 4;
-        } else s = p / (2 * Math.PI) * Math.asin(c / a);
-        return a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b;
-    },
-    easeInOutElastic: function easeInOutElastic(x, t, b, c, d) {
-        var s = 1.70158;
-        var p = 0;
-        var a = c;
-        if (t == 0) return b;
-        if ((t /= d / 2) == 2) return b + c;
-        if (!p) p = d * (.3 * 1.5);
-        if (a < Math.abs(c)) {
-            a = c;
-            s = p / 4;
-        } else s = p / (2 * Math.PI) * Math.asin(c / a);
-        if (t < 1) return -.5 * (a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
-        return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * .5 + c + b;
-    },
-    easeInBack: function easeInBack(x, t, b, c, d, s) {
-        if (s == undefined) s = 1.70158;
-        return c * (t /= d) * t * ((s + 1) * t - s) + b;
-    },
-    easeOutBack: function easeOutBack(x, t, b, c, d, s) {
-        if (s == undefined) s = 1.70158;
-        return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
-    },
-    easeInOutBack: function easeInOutBack(x, t, b, c, d, s) {
-        if (s == undefined) s = 1.70158;
-        if ((t /= d / 2) < 1) return c / 2 * (t * t * (((s *= 1.525) + 1) * t - s)) + b;
-        return c / 2 * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + b;
-    },
-    easeInBounce: function easeInBounce(x, t, b, c, d) {
-        return c - EASING.easeOutBounce(d - x, t, 0, c, d) + b;
-    },
-    easeOutBounce: function easeOutBounce(x, t, b, c, d) {
-        if ((t /= d) < 1 / 2.75) {
-            return c * (7.5625 * t * t) + b;
-        } else if (t < 2 / 2.75) {
-            return c * (7.5625 * (t -= 1.5 / 2.75) * t + .75) + b;
-        } else if (t < 2.5 / 2.75) {
-            return c * (7.5625 * (t -= 2.25 / 2.75) * t + .9375) + b;
-        } else {
-            return c * (7.5625 * (t -= 2.625 / 2.75) * t + .984375) + b;
-        }
-    },
-    easeInOutBounce: function easeInOutBounce(x, t, b, c, d) {
-        if (t < d / 2) return EASING.easeInBounce(x, t * 2, 0, c, d) * .5 + b;
-        return EASING.easeOutBounce(x, t * 2 - d, 0, c, d) * .5 + c * .5 + b;
+    easeOutBounce: bounceOut,
+    easeInOutBounce: function easeInOutBounce(x) {
+        return x < 0.5 ? (1 - bounceOut(1 - 2 * x)) / 2 : (1 + bounceOut(2 * x - 1)) / 2;
     }
 };
 

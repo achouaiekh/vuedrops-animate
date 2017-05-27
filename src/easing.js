@@ -1,202 +1,188 @@
-//Inspired from :------>
-
-/* ============================================================
- * jQuery Easing v1.3 - http://gsgd.co.uk/sandbox/jquery/easing/
- *
+/*
+ * jQuery Easing v1.4.0 - http://gsgd.co.uk/sandbox/jquery/easing/
  * Open source under the BSD License.
- *
  * Copyright © 2008 George McGinley Smith
  * All rights reserved.
- * https://raw.github.com/danro/jquery-easing/master/LICENSE
- * ======================================================== */
+ * https://raw.github.com/gdsmith/jquery-easing/master/LICENSE
+ */
 
 
-export default {
-    // t: current time, b: beginning value, c: change In value, d: duration
 
-    linear(t) {
-        return t;
-    },
+// Preserve the original jQuery "swing" easing as "jswing"
+$.easing['jswing'] = $.easing['swing'];
 
-    swing(t) {
-        return 0.5 - Math.cos(p * Math.PI) / 2;
-    },
+let pow = Math.pow,
+    sqrt = Math.sqrt,
+    sin = Math.sin,
+    cos = Math.cos,
+    PI = Math.PI,
+    c1 = 1.70158,
+    c2 = c1 * 1.525,
+    c3 = c1 + 1,
+    c4 = ( 2 * PI ) / 3,
+    c5 = ( 2 * PI ) / 4.5;
 
-    easeInQuad (x, t, b, c, d) {
-        return c * (t /= d) * t + b;
-    },
-
-    easeOutQuad (x, t, b, c, d) {
-        return -c * (t /= d) * (t - 2) + b;
-    },
-
-    easeInOutQuad (x, t, b, c, d) {
-        if ((t /= d / 2) < 1) return c / 2 * t * t + b;
-        return -c / 2 * ((--t) * (t - 2) - 1) + b;
-    },
-
-    easeInCubic (x, t, b, c, d) {
-        return c * (t /= d) * t * t + b;
-    },
-
-    easeOutCubic (x, t, b, c, d) {
-        return c * ((t = t / d - 1) * t * t + 1) + b;
-    },
-
-    easeInOutCubic (x, t, b, c, d) {
-        if ((t /= d / 2) < 1) return c / 2 * t * t * t + b;
-        return c / 2 * ((t -= 2) * t * t + 2) + b;
-    },
-
-    easeInQuart (x, t, b, c, d) {
-        return c * (t /= d) * t * t * t + b;
-    },
-
-    easeOutQuart (x, t, b, c, d) {
-        return -c * ((t = t / d - 1) * t * t * t - 1) + b;
-    },
-
-    easeInOutQuart (x, t, b, c, d) {
-        if ((t /= d / 2) < 1) return c / 2 * t * t * t * t + b;
-        return -c / 2 * ((t -= 2) * t * t * t - 2) + b;
-    },
-
-    easeInQuint (x, t, b, c, d) {
-        return c * (t /= d) * t * t * t * t + b;
-    },
-
-    easeOutQuint (x, t, b, c, d) {
-        return c * ((t = t / d - 1) * t * t * t * t + 1) + b;
-    },
-
-    easeInOutQuint (x, t, b, c, d) {
-        if ((t /= d / 2) < 1) return c / 2 * t * t * t * t * t + b;
-        return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
-    },
-
-    easeInSine (x, t, b, c, d) {
-        return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
-    },
-
-    easeOutSine (x, t, b, c, d) {
-        return c * Math.sin(t / d * (Math.PI / 2)) + b;
-    },
-
-    easeInOutSine (x, t, b, c, d) {
-        return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
-    },
-
-    easeInExpo (x, t, b, c, d) {
-        return (t == 0) ? b : c * Math.pow(2, 10 * (t / d - 1)) + b;
-    },
-
-    easeOutExpo (x, t, b, c, d) {
-        return (t == d) ? b + c : c * (-Math.pow(2, -10 * t / d) + 1) + b;
-    },
-
-    easeInOutExgitpo (x, t, b, c, d) {
-        if (t == 0) return b;
-        if (t == d) return b + c;
-        if ((t /= d / 2) < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
-        return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
-    },
-
-    easeInCirc (x, t, b, c, d) {
-        return -c * (Math.sqrt(1 - (t /= d) * t) - 1) + b;
-    },
-
-    easeOutCirc (x, t, b, c, d) {
-        return c * Math.sqrt(1 - (t = t / d - 1) * t) + b;
-    },
-
-    easeInOutCirc (x, t, b, c, d) {
-        if ((t /= d / 2) < 1) return -c / 2 * (Math.sqrt(1 - t * t) - 1) + b;
-        return c / 2 * (Math.sqrt(1 - (t -= 2) * t) + 1) + b;
-    },
-
-    easeInElastic (x, t, b, c, d) {
-        let s = 1.70158;
-        let p = 0;
-        let a = c;
-        if (t == 0) return b;
-        if ((t /= d) == 1) return b + c;
-        if (!p) p = d * .3;
-        if (a < Math.abs(c)) {
-            a = c;
-            s = p / 4;
-        }
-        else  s = p / (2 * Math.PI) * Math.asin(c / a);
-        return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
-    },
-
-    easeOutElastic (x, t, b, c, d) {
-        let s = 1.70158;
-        let p = 0;
-        let a = c;
-        if (t == 0) return b;
-        if ((t /= d) == 1) return b + c;
-        if (!p) p = d * .3;
-        if (a < Math.abs(c)) {
-            a = c;
-            s = p / 4;
-        }
-        else  s = p / (2 * Math.PI) * Math.asin(c / a);
-        return a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b;
-    },
-
-    easeInOutElastic (x, t, b, c, d) {
-        let s = 1.70158;
-        let p = 0;
-        let a = c;
-        if (t == 0) return b;
-        if ((t /= d / 2) == 2) return b + c;
-        if (!p) p = d * (.3 * 1.5);
-        if (a < Math.abs(c)) {
-            a = c;
-            s = p / 4;
-        }
-        else s = p / (2 * Math.PI) * Math.asin(c / a);
-        if (t < 1) return -.5 * (a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
-        return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * .5 + c + b;
-    },
-
-    easeInBack (x, t, b, c, d, s) {
-        if (s == undefined) s = 1.70158;
-        return c * (t /= d) * t * ((s + 1) * t - s) + b;
-    },
-
-    easeOutBack (x, t, b, c, d, s) {
-        if (s == undefined) s = 1.70158;
-        return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
-    },
-
-    easeInOutBack (x, t, b, c, d, s) {
-        if (s == undefined) s = 1.70158;
-        if ((t /= d / 2) < 1) return c / 2 * (t * t * (((s *= (1.525)) + 1) * t - s)) + b;
-        return c / 2 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2) + b;
-    },
-
-    easeInBounce (x, t, b, c, d) {
-        return c - EASING.easeOutBounce(d - x, t, 0, c, d) + b;
-    },
-
-    easeOutBounce (x, t, b, c, d) {
-        if ((t /= d) < (1 / 2.75)) {
-            return c * (7.5625 * t * t) + b;
-        } else if (t < (2 / 2.75)) {
-            return c * (7.5625 * (t -= (1.5 / 2.75)) * t + .75) + b;
-        } else if (t < (2.5 / 2.75)) {
-            return c * (7.5625 * (t -= (2.25 / 2.75)) * t + .9375) + b;
-        } else {
-            return c * (7.5625 * (t -= (2.625 / 2.75)) * t + .984375) + b;
-        }
-    },
-
-    easeInOutBounce (x, t, b, c, d) {
-        if (t < d / 2) return EASING.easeInBounce(x, t * 2, 0, c, d) * .5 + b;
-        return EASING.easeOutBounce(x, t * 2 - d, 0, c, d) * .5 + c * .5 + b;
+// x is the fraction of animation progress, in the range 0..1
+function bounceOut(x) {
+    let n1 = 7.5625,
+        d1 = 2.75;
+    if (x < 1 / d1) {
+        return n1 * x * x;
+    } else if (x < 2 / d1) {
+        return n1 * (x -= (1.5 / d1)) * x + .75;
+    } else if (x < 2.5 / d1) {
+        return n1 * (x -= (2.25 / d1)) * x + .9375;
+    } else {
+        return n1 * (x -= (2.625 / d1)) * x + .984375;
     }
-
 }
 
 
+export default {
+
+    linear(x){
+        return x
+    },
+
+    swing(x) {
+        return x * x;
+    }
+
+    ,
+    easeInQuad(x) {
+        return x * x;
+    }
+    ,
+    easeOutQuad(x) {
+        return 1 - ( 1 - x ) * ( 1 - x );
+    }
+    ,
+    easeInOutQuad(x) {
+        return x < 0.5 ?
+            2 * x * x :
+            1 - pow(-2 * x + 2, 2) / 2;
+    }
+    ,
+    easeInCubic(x) {
+        return x * x * x;
+    }
+    ,
+    easeOutCubic(x) {
+        return 1 - pow(1 - x, 3);
+    }
+    ,
+    easeInOutCubic(x) {
+        return x < 0.5 ?
+            4 * x * x * x :
+            1 - pow(-2 * x + 2, 3) / 2;
+    }
+    ,
+    easeInQuart(x) {
+        return x * x * x * x;
+    }
+    ,
+    easeOutQuart(x) {
+        return 1 - pow(1 - x, 4);
+    }
+    ,
+    easeInOutQuart(x) {
+        return x < 0.5 ?
+            8 * x * x * x * x :
+            1 - pow(-2 * x + 2, 4) / 2;
+    }
+    ,
+    easeInQuint(x) {
+        return x * x * x * x * x;
+    }
+    ,
+    easeOutQuint(x) {
+        return 1 - pow(1 - x, 5);
+    }
+    ,
+    easeInOutQuint(x) {
+        return x < 0.5 ?
+            16 * x * x * x * x * x :
+            1 - pow(-2 * x + 2, 5) / 2;
+    }
+    ,
+    easeInSine(x) {
+        return 1 - cos(x * PI / 2);
+    }
+    ,
+    easeOutSine(x) {
+        return sin(x * PI / 2);
+    }
+    ,
+    easeInOutSine(x) {
+        return -( cos(PI * x) - 1 ) / 2;
+    }
+    ,
+    easeInExpo(x) {
+        return x === 0 ? 0 : pow(2, 10 * x - 10);
+    }
+    ,
+    easeOutExpo(x) {
+        return x === 1 ? 1 : 1 - pow(2, -10 * x);
+    }
+    ,
+    easeInOutExpo(x) {
+        return x === 0 ? 0 : x === 1 ? 1 : x < 0.5 ?
+            pow(2, 20 * x - 10) / 2 :
+            ( 2 - pow(2, -20 * x + 10) ) / 2;
+    }
+    ,
+    easeInCirc(x) {
+        return 1 - sqrt(1 - pow(x, 2));
+    }
+    ,
+    easeOutCirc(x) {
+        return sqrt(1 - pow(x - 1, 2));
+    }
+    ,
+    easeInOutCirc(x) {
+        return x < 0.5 ?
+            ( 1 - sqrt(1 - pow(2 * x, 2)) ) / 2 :
+            ( sqrt(1 - pow(-2 * x + 2, 2)) + 1 ) / 2;
+    }
+    ,
+    easeInElastic(x) {
+        return x === 0 ? 0 : x === 1 ? 1 :
+            -pow(2, 10 * x - 10) * sin(( x * 10 - 10.75 ) * c4);
+    }
+    ,
+    easeOutElastic(x) {
+        return x === 0 ? 0 : x === 1 ? 1 :
+            pow(2, -10 * x) * sin(( x * 10 - 0.75 ) * c4) + 1;
+    }
+    ,
+    easeInOutElastic(x) {
+        return x === 0 ? 0 : x === 1 ? 1 : x < 0.5 ?
+            -( pow(2, 20 * x - 10) * sin(( 20 * x - 11.125 ) * c5)) / 2 :
+            pow(2, -20 * x + 10) * sin(( 20 * x - 11.125 ) * c5) / 2 + 1;
+    }
+    ,
+    easeInBack(x) {
+        return c3 * x * x * x - c1 * x * x;
+    }
+    ,
+    easeOutBack(x) {
+        return 1 + c3 * pow(x - 1, 3) + c1 * pow(x - 1, 2);
+    }
+    ,
+    easeInOutBack(x) {
+        return x < 0.5 ?
+            ( pow(2 * x, 2) * ( ( c2 + 1 ) * 2 * x - c2 ) ) / 2 :
+            ( pow(2 * x - 2, 2) * ( ( c2 + 1 ) * ( x * 2 - 2 ) + c2 ) + 2 ) / 2;
+    }
+    ,
+    easeInBounce(x) {
+        return 1 - bounceOut(1 - x);
+    }
+    ,
+    easeOutBounce: bounceOut,
+    easeInOutBounce(x) {
+        return x < 0.5 ?
+            ( 1 - bounceOut(1 - 2 * x) ) / 2 :
+            ( 1 + bounceOut(2 * x - 1) ) / 2;
+    }
+}
