@@ -1,5 +1,14 @@
-var VDAnimation =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["VDAnimation"] = factory();
+	else
+		root["VDAnimation"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -85,14 +94,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var OptionWrapper = function () {
-    function OptionWrapper(chain, callbacks) {
+    function OptionWrapper(chain, callbacks, options) {
         _classCallCheck(this, OptionWrapper);
 
         this.callbacks = callbacks;
 
         this.chain = chain;
 
-        this.Options = this.chain.defaultOptions;
+        this.Options = Object.assign({}, this.chain.defaultOptions, options);
 
         this.options();
 
@@ -210,7 +219,6 @@ Object.defineProperty(exports, "__esModule", {
  */
 
 // Preserve the original jQuery "swing" easing as "jswing"
-$.easing['jswing'] = $.easing['swing'];
 
 var pow = Math.pow,
     sqrt = Math.sqrt,
@@ -424,7 +432,7 @@ var Chain = function () {
                 callbacks = temp;
             }
 
-            return new _OptionWrapper2.default(this, callbacks);
+            return new _OptionWrapper2.default(this, callbacks, options);
         }
     }, {
         key: 'play',
@@ -454,7 +462,7 @@ var Chain = function () {
                         try {
                             var _options$function;
 
-                            var delta = _easing2.default[options.easing](t, t * options.during, 0, 1, options.during);
+                            var delta = _easing2.default[options.easing](t);
 
                             delta = options.from + delta * (options.to - options.from);
 
@@ -551,3 +559,4 @@ exports.default = Chain;
 
 /***/ })
 /******/ ]);
+});

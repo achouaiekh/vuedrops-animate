@@ -30,7 +30,7 @@ export default class Chain {
             callbacks = temp
         }
 
-        return new OptionWrapper(this, callbacks)
+        return new OptionWrapper(this, callbacks, options)
     }
 
 
@@ -58,7 +58,7 @@ export default class Chain {
 
                     try {
 
-                        let delta = EASING[options.easing](t, t * options.during, 0, 1, options.during)
+                        let delta = EASING[options.easing](t)
 
                         delta = options.from + delta * (options.to - options.from)
 

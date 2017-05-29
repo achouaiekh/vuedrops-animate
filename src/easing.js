@@ -9,7 +9,6 @@
 
 
 // Preserve the original jQuery "swing" easing as "jswing"
-$.easing['jswing'] = $.easing['swing'];
 
 let pow = Math.pow,
     sqrt = Math.sqrt,

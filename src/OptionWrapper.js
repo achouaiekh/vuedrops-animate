@@ -1,12 +1,12 @@
 export default class OptionWrapper {
 
-    constructor(chain, callbacks) {
+    constructor(chain, callbacks, options) {
 
         this.callbacks = callbacks
 
         this.chain = chain
 
-        this.Options = this.chain.defaultOptions
+        this.Options = Object.assign({}, this.chain.defaultOptions, options)
 
         this.options()
 

@@ -40,7 +40,7 @@
             width4: function (w) {
                 animation.style.height = w + 'px'
             }
-        }).from(5).to(500).during(900).animate('height', 'width').then().animate('width2').then(function () {
+        }, {from:5, to: 500, during: 1000}).animate('height', 'width').then().animate('width2').then(function () {
             console.log('then initiated')
         }).animate('width3').then().animate('width4').register(['width']).from(5).to(10).animate('width')
 
