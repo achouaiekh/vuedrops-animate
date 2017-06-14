@@ -12,41 +12,40 @@
 </div>
 
 
-
-
-<script src="dist/app.js"></script>
+<script src="dist/vuedrops-animate.js"></script>
 <script>
 
     let animation = document.querySelector('#animation')
-    let chain = new VDAnimation.default({every: 10, easing: 'easeInElastic'})
-        .register({
-            height: function (h) {
-                console.log('height: ', h)
-            }
-        })
-        .register({
-            width: function (w) {
+    let chain = new VDAnimation.default({every: 30, easing: 'easeOutElastic'})
+    /* .register({
+     height: function (h) {
+     console.log('height: ', h)
+     }
+     })*/
+        .register(
+            "width", function (w) {
                 console.log('width: ', w)
-            }
-        }).register({
-            width2: function (w) {
+            })
+        .register(
+            "width2", function (w) {
                 console.log('width2: ', w)
             }
-        }).register({
-            width3: function (w) {
+        ).register(
+            "width3", function (w) {
                 console.log('width3: ', w)
             }
-        }).from(5).to(500).during(900).register({
-            width4: function (w) {
-                animation.style.height = w + 'px'
-            }
-        }, {from:5, to: 500, during: 1000}).animate('height', 'width').then().animate('width2').then(function () {
-            console.log('then initiated')
-        }).animate('width3').then().animate('width4').register(['width']).from(5).to(10).animate('width')
+        ).register("width4", animation, {height: "<value>px"})
+        .from(5).to(500).during(3000)
+        .animate('width4').after(3000).animate('width4')
+
+        .then(function () {
+            console.log('then completed')
+        }).animate('width')
+        .then().animate('width2').animate("width4", ["width3"])
 
 
-    document.querySelector('#stop').addEventListener('click', function(event){
-        chain.stop( 'width4')
+    document.querySelector('#stop').addEventListener('click', function (event) {
+        chain.stop('width4')
     })
 
 </script>

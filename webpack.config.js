@@ -3,27 +3,26 @@ const webpack = require('webpack');
 
 
 module.exports = {
+
     context: path.resolve(__dirname, './src'),
+    devtool: 'source-map',
     entry: {
-        app: './Chain.js',
+        app: './Animate.js',
     },
     output: {
         path: path.resolve(__dirname, './dist'),
-        filename: '[name].js',
+        filename: 'vuedrops-animate.js',
         libraryTarget: 'umd',
+        umdNamedDefine: true,
         library: 'VDAnimation',
-        publicPath: '/assets',
     },
 
     module: {
         rules: [
             {
                 test: /\.js$/,
+                loader: 'babel-loader',
                 exclude: [/node_modules/],
-                use: [{
-                    loader: 'babel-loader',
-                    options: { presets: ['es2015'] },
-                }],
             },
         ],
     },

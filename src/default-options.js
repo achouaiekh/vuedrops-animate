@@ -4,8 +4,7 @@ export default {
     during: 300,
     every: 10,
     easing: 'linear',
-    function: () => {
-    },
+    callback: null,
     context: null,
     arguments: []
 

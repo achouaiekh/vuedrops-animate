@@ -1,28 +1,35 @@
 export default class OptionWrapper {
 
-    constructor(chain, callbacks, options) {
+    constructor(animation, name, options = {}) {
 
-        this.callbacks = callbacks
+        this.name = name
 
-        this.chain = chain
+        this.animation = animation
 
-        this.Options = Object.assign({}, this.chain.defaultOptions, options)
+        Object.assign(this.animation.callbacks[this.name], this.animation.callbacks[this.name], options)
 
-        this.options()
+        this._assignMethod()
 
-        this.assignMethod()
+    }
 
+    _assignMethod(methods) {
 
+        ['from', 'to', 'context', 'arguments',  'easing', 'every', 'during', 'callback'].forEach(method =>
+            this.__proto__[method] = (v) => {
+                this.animation.callbacks[this.name][method] = v
+                return this
+            }
+        )
     }
 
     options(options = {}) {
 
-        this.Options = Object.assign({}, this.Options, options)
-
-        this.setOptions()
+        Object.assign(this.animation.callbacks[this.name], this.animation.callbacks[this.name], options)
 
         return this
     }
+
+
 
     call(context, ...args) {
 
@@ -30,53 +37,47 @@ export default class OptionWrapper {
         this.context(context)
     }
 
-    arguments(...args) {
+    apply(context, args) {
 
-        this.options({arguments: args})
+        this.call(context, ...args)
+    }
+
+    register(name, callback = () => {
+    }, options = {}) {
+
+        return this.animation.register(name, callback, options)
+    }
+
+    registerCss(name, element, properties = {}, options = {}){
+
+        return this.animation.registerCss(name, element, properties, options)
+    }
+
+    css(element, properties, options={}){
+
+        return this.animation.registerCss(this.name, element, properties, options)
     }
 
 
-    register(callbacks, context, ...args) {
-
-        return this.chain.register(callbacks, context, ...args)
-
-    }
 
     animate(...args) {
 
-        return this.chain.animate(...args)
+        return this.animation.animate(...args)
     }
 
-    then(callback) {
+    then(callback, context = this.animation) {
 
-        return this.chain.then(callback)
+        return this.animation.then(callback, context)
     }
 
     stop(...args) {
 
-        return this.chain.stop(...args)
+        return this.animation.stop(...args)
     }
 
+    after(delay = 0) {
 
-    assignMethod(methods) {
-
-        ['from', 'to', 'easing', 'during', 'every', 'context'].forEach(method =>
-            this.__proto__[method] = (v) =>
-                this.options({[method]: v})
-        )
-
-
-    }
-
-    setOptions(options = this.Options) {
-
-        for (let name in this.callbacks) {
-
-            this.chain.options[name] = Object.assign({}, options, {function: this.callbacks[name]})
-
-        }
-
-        return this
+        return this.animation.after(delay)
     }
 
 }
