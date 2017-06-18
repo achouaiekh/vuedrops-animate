@@ -1,6 +1,6 @@
 {
   "name": "vuedrops-animate",
-  "version": "1.0.29",
+  "version": "1.0.30",
   "description": "Animation tool",
   "main": "dist/vuedrops-animate.js",
   "scripts": {
