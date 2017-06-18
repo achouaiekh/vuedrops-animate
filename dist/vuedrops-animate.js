@@ -465,7 +465,7 @@ var Animation = function () {
 
                 var options = _this2.callbacks[name];
 
-                options.callback(options.from);
+                options.callback.call(options.context, options.from);
 
                 _this2.canceled[name] = false;
 
