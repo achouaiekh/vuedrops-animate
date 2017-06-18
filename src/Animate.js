@@ -93,10 +93,10 @@ export default class Animation {
                     let time = (timestamp || +new Date()) - start;
 
                     if (time >= 0)
-                        options.callback(easing(time, options.from, options.to - options.from, options.during));
+                        options.callback.call(options.context, easing(time, options.from, options.to - options.from, options.during));
 
                     if (time >= 0 && time >= options.during) {
-                        options.callback(options.to);
+                        options.callback.call(options.context, options.to);
                         resolve()
                     }
                     else {
