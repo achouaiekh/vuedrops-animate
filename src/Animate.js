@@ -68,7 +68,7 @@ export default class Animation {
 
             let options = this.callbacks[name]
 
-            options.callback(options.from)
+            options.callback.call(options.context, options.from)
 
             this.canceled[name] = false
 
