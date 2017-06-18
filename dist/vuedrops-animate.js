@@ -227,7 +227,6 @@ exports.default = {
     callback: null,
     context: null,
     arguments: []
-
 };
 
 /***/ }),
@@ -400,6 +399,9 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.__useDefault = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -416,6 +418,8 @@ var _OptionWrapper = __webpack_require__(0);
 var _OptionWrapper2 = _interopRequireDefault(_OptionWrapper);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -477,7 +481,10 @@ var Animation = function () {
 
                     function loop(timestamp) {
 
-                        if (_this.canceled[name]) return;
+                        if (_this.canceled[name]) {
+                            resolve();
+                            return;
+                        }
 
                         var time = (timestamp || +new Date()) - start;
 
@@ -581,6 +588,14 @@ var Animation = function () {
             });
         }
     }, {
+        key: 'setStyles',
+        value: function setStyles(element, properties) {
+
+            Animation.setStyles(element, properties);
+
+            return this;
+        }
+    }, {
         key: 'registerCss',
         value: function registerCss(name, element) {
             var properties = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -641,9 +656,32 @@ var Animation = function () {
         }
     }, {
         key: 'setStyles',
-        value: function setStyles(element, properties) {
+        value: function setStyles(element, properties, value) {
+            if (typeof properties === "string") properties = _defineProperty({}, properties, value);
+
             for (var property in properties) {
                 Animation.setStyle(element, property, properties[property]);
+            }
+        }
+    }, {
+        key: 'setAttributes',
+        value: function setAttributes(element, attributes, value) {
+            if (typeof attributes === "string") attributes = _defineProperty({}, attribute, value);
+            for (var property in attributes) {
+                element.setAttribute(property, attributes[property]);
+            }
+        }
+    }, {
+        key: 'isElement',
+        value: function isElement(obj) {
+            try {
+                //Using W3 DOM2 (works for FF, Opera and Chrom)
+                return obj instanceof HTMLElement;
+            } catch (e) {
+                //Browsers not supporting W3 DOM2 don't have HTMLElement and
+                //an exception is thrown and we end up here. Testing some
+                //properties that all elements have. (works on IE7)
+                return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === "object" && obj.nodeType === 1 && _typeof(obj.style) === "object" && _typeof(obj.ownerDocument) === "object";
             }
         }
     }]);
@@ -652,6 +690,7 @@ var Animation = function () {
 }();
 
 exports.default = Animation;
+var __useDefault = exports.__useDefault = true;
 
 /***/ })
 /******/ ]);

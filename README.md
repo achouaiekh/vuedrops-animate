@@ -27,13 +27,26 @@ npm install -S vuedrops-animate
 ```javascript
   import Animation from "vuedrops-animate"
   
-  let Animation = new Animation({from: 1, to: 10, during: 300, every: 10, easing: 'linear'}) // this will be the default options for every animation regestry
-                        .register({height: function(count){ console.log('height: ', count)}}) // register the first callback
-                        .register({width: function(count){ console.log('width: ', count)}}).from(1).to(3) // register the second callback to animate the value from 1 to 3
-                        .animate('height', 'width') // play the animation for the two callback
-                        .then().animate('height').from(5).to(10)  // after the previous two animation are completed we start the height animation again
-                        .then(function(){ console.log("Counting finished")}) // after the height animation is completed we trigger the callback 
-
+  let Element = ducument.querySelector('#element'),
+      animateHeight = function(height){ Element.style.height = height + 'px' }
+  
+  // first we create a new instance of the Animation Class, the prarameter are the options of the animation chain
+  // they will be the default parameter for every animation callback
+  let animation = new VDAnimate({easing:'linear')
+           // then we register our first callback animation
+          .register("height1", setHeight)
+          //then we set the option of this animation
+          .from(0).to(100).during(100).every(20)
+          //we register our second callback animation and set the options
+          .register("height2").callback(setHeight).options({from: 100, to: 50, every(25), during(250)})
+          //we can also use css directly
+          .register("height3").css({height: "&lt;value&gt;px"}).options({from: 50, to: 0, every(25), during(250)})
+          //we start ou first animation
+          .animate('height1')
+          //then after the first animation is completed we trigger the second one
+          .then().animate('height2')
+          //then after .3s the second animation is completed we animate the third one
+          .then().after(500).animate('height3')
 ```  
 
 

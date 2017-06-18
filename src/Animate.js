@@ -85,7 +85,10 @@ export default class Animation {
 
                 function loop(timestamp) {
 
-                    if (_this.canceled[name]) return
+                    if (_this.canceled[name]) {
+                        resolve()
+                        return
+                    }
 
                     let time = (timestamp || +new Date()) - start;
 
@@ -184,17 +187,48 @@ export default class Animation {
         }
     }
 
-    static setStyles(element, properties) {
+    static setStyles(element, properties, value) {
+        if (typeof properties === "string") properties = {[properties]: value}
+
         for (let property in properties) {
             Animation.setStyle(element, property, properties[property])
         }
     }
 
+    static setAttributes(element, attributes, value) {
+        if (typeof attributes === "string") attributes = {[attribute]: value}
+        for (let property in attributes) {
+            element.setAttribute(property, attributes[property])
+        }
+    }
+
+    static isElement(obj) {
+        try {
+            //Using W3 DOM2 (works for FF, Opera and Chrom)
+            return obj instanceof HTMLElement;
+        }
+
+        catch (e) {
+            //Browsers not supporting W3 DOM2 don't have HTMLElement and
+            //an exception is thrown and we end up here. Testing some
+            //properties that all elements have. (works on IE7)
+            return (typeof obj === "object") &&
+                (obj.nodeType === 1) && (typeof obj.style === "object") &&
+                (typeof obj.ownerDocument === "object");
+        }
+    }
+
+    setStyles(element, properties) {
+
+        Animation.setStyles(element, properties)
+
+        return this
+    }
+
     registerCss(name, element, properties = {}, options = {}) {
         let callback = (value) => {
-            for (let property in properties) {
+            for (let property in properties)
                 Animation.setStyle(element, property, properties[property].replace('<value>', value))
-            }
         }
 
         return this.register(name, callback, options)
@@ -203,5 +237,7 @@ export default class Animation {
 
 
 }
+
+export var __useDefault = true;
 
 

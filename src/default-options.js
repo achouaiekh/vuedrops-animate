@@ -7,5 +7,4 @@ export default {
     callback: null,
     context: null,
     arguments: []
-
 }

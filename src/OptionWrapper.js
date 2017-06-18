@@ -14,7 +14,7 @@ export default class OptionWrapper {
 
     _assignMethod(methods) {
 
-        ['from', 'to', 'context', 'arguments',  'easing', 'every', 'during', 'callback'].forEach(method =>
+        ['from', 'to', 'context', 'arguments', 'easing', 'every', 'during', 'callback'].forEach(method =>
             this.__proto__[method] = (v) => {
                 this.animation.callbacks[this.name][method] = v
                 return this
@@ -22,14 +22,13 @@ export default class OptionWrapper {
         )
     }
 
+
     options(options = {}) {
 
         Object.assign(this.animation.callbacks[this.name], this.animation.callbacks[this.name], options)
 
         return this
     }
-
-
 
     call(context, ...args) {
 
@@ -48,17 +47,15 @@ export default class OptionWrapper {
         return this.animation.register(name, callback, options)
     }
 
-    registerCss(name, element, properties = {}, options = {}){
+    registerCss(name, element, properties = {}, options = {}) {
 
         return this.animation.registerCss(name, element, properties, options)
     }
 
-    css(element, properties, options={}){
+    css(element, properties, options = {}) {
 
         return this.animation.registerCss(this.name, element, properties, options)
     }
-
-
 
     animate(...args) {
 
